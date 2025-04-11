@@ -11,7 +11,7 @@
 
     <modules>
         <module>gateway-service</module>
-        <module>mcsv-auth</module>
+        <module>auth-service</module>
     </modules>
 
     <groupId>backend</groupId>
