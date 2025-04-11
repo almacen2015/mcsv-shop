@@ -1,0 +1,93 @@
+services:
+  gateway:
+    container_name: gateway-service
+    build: .
+    ports:
+      - "9000:9000"
+    depends_on:
+      - authentication
+      - product
+      - client
+      - movement
+      - sales
+
+  authentication:
+    container_name: auth-service
+    build: ../mcsv-auth
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/authentication-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+
+  product:
+    container_name: product-service
+    build: ../mcsv-productos
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/productos-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+
+  client:
+    container_name: client-service
+    build: ../mcsv-clientes
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/clientes-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+
+  movement:
+    container_name: movement-service
+    build: ../mcsv-movimiento
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/inventario-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/producto
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  sales:
+    container_name: sales-service
+    build: ../mcsv-ventas
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/ventas-db
+      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/producto
+      - SPRING_MOVEMENT_SERVICE_URL=http://gateway:9000/api/movimiento
+      - SPRING_CLIENT_SERVICE_URL=http://gateway:9000/api/client
+    ports:
+      - "8085:8085"
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
+  postgres:
+    image: postgres
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
