@@ -15,6 +15,7 @@
         <module>product-service</module>
         <module>client-service</module>
         <module>inventory-service</module>
+        <module>sale-service</module>
     </modules>
 
     <groupId>backend</groupId>

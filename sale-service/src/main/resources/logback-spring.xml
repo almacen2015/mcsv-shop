@@ -1,6 +1,6 @@
 <configuration>
     <!-- Define una variable para el nombre del microservicio -->
-    <property name="LOG_FILE" value="inventory-service/logs/inventario.log"/>
+    <property name="LOG_FILE" value="sale-service/logs/ventas.log"/>
 
     <!-- Appender para la consola -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -13,7 +13,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/inventario-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/ventas-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -22,7 +22,7 @@
     </appender>
 
     <!-- Configuración de niveles de log -->
-    <logger name="backend.inventoryservice" level="error" additivity="false">
+    <logger name="backend.saleservice" level="error" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
 
