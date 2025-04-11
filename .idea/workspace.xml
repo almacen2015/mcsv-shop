@@ -5,45 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a73e4486-832a-41fe-a5e9-d6e75dec8b92" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2b2bc698-7049-4c25-a54f-bec0317516f8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2b2bc698-7049-4c25-a54f-bec0317516f8.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/.gitattributes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/McsvAuthApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/AuthServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/controller/AuthenticationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/exception/AuthException.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/exception/AuthException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/filter/JwtTokenValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/filter/JwtTokenValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/mappers/PermisoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/mappers/PermisoMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/mappers/RolMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/mappers/RolMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/mappers/UsuarioMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/mappers/UsuarioMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/dto/AuthLoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/dto/AuthLoginRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/dto/AuthResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/dto/PermisoDtoResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/dto/PermisoDtoResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/dto/RolDtoResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/dto/RolDtoResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/dto/UsuarioDtoRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/dto/UsuarioDtoRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/dto/UsuarioDtoResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/dto/UsuarioDtoResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/entity/Permiso.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/entity/Permiso.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/entity/Rol.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/entity/Rol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/entity/RolEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/entity/RolEnum.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/models/entity/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/models/entity/Usuario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/repository/PermisoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/repository/PermisoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/repository/RolRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/repository/RolRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/repository/UsuarioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/repository/UsuarioRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/security/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/service/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/service/UsuarioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/service/impl/UsuarioServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/service/impl/UsuarioServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/java/backend/mcsvauth/util/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/java/backend/authservice/util/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/application-dev.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/resources/application-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/application-test.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mcsv-auth/src/test/java/backend/mcsvauth/McsvAuthApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/src/test/java/backend/authservice/McsvAuthApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,10 +21,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2vbCsj3oIMj1YJoTCEL9YYBJufE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -67,6 +34,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Maven.GatewayService [clean].executor": "Run",
+    "Maven.auth-service [clean].executor": "Run",
+    "Maven.gateway-service [clean].executor": "Run",
     "Maven.mcsv-auth [clean].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -83,6 +52,10 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.configurations.included.in.services": "true",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   },
@@ -92,6 +65,16 @@
     ]
   }
 }]]></component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
   <component name="RunManager" selected="Spring Boot.AuthServiceApplication">
     <configuration name="AuthServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="auth-service" />
@@ -101,8 +84,15 @@
       </method>
     </configuration>
     <configuration name="GatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="GatewayService" />
+      <module name="gateway-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="backend.gatewayservice.GatewayServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="McsvProductosApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="mcsv-productos" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="backend.mcsvproductos.McsvProductosApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -125,6 +115,7 @@
       <option name="presentableId" value="Default" />
       <updated>1744404597787</updated>
       <workItem from="1744404601108" duration="2086000" />
+      <workItem from="1744407136361" duration="540000" />
     </task>
     <servers />
   </component>
@@ -134,6 +125,8 @@
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/mcsv-auth" />
+      <path value="$PROJECT_DIR$/mcsv-productos" />
     </ignored-roots>
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
