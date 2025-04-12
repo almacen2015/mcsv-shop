@@ -22,7 +22,7 @@
     </appender>
 
     <!-- Configuración de niveles de log -->
-    <logger name="backend.productoservice" level="error" additivity="false">
+    <logger name="backend.productservice" level="error" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
 

@@ -8,6 +8,7 @@ import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.models.mappers.ClienteMapper;
 import backend.clientservice.repositories.ClienteRepository;
 import backend.clientservice.services.ClienteService;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,10 +64,16 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<ClienteResponseDTO> listAll() {
-        List<Cliente> clientes = clienteRepository.findAll();
+    public Page<ClienteResponseDTO> listAll(Integer page, Integer size, String orderBy) {
+        validatePaginado(page, size, orderBy);
+        Pageable pageable = constructPageable(page, size, orderBy);
 
-        return clienteMapper.toListResponseDTO(clientes);
+        Page<Cliente> clientes = clienteRepository.findAll(pageable);
+
+        List<ClienteResponseDTO> response = clientes.getContent().stream()
+                .map(clienteMapper::toResponseDTO).toList();
+
+        return new PageImpl<>(response, pageable, clientes.getTotalElements());
     }
 
     @Override
@@ -75,6 +82,24 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteException(ClienteException.CLIENT_NOT_FOUND));
 
         return clienteMapper.toResponseDTO(cliente);
+    }
+
+    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
+        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
+    }
+
+    private void validatePaginado(Integer page, Integer size, String orderBy) {
+        if (page <= 0) {
+            throw new ClienteException(ClienteException.PAGE_NUMBER_INVALID);
+        }
+
+        if (size <= 0) {
+            throw new ClienteException(ClienteException.SIZE_NUMBER_INVALID);
+        }
+
+        if (orderBy == null || orderBy.isBlank()) {
+            throw new ClienteException(ClienteException.SORT_NAME_INVALID);
+        }
     }
 
     private void validateLetraNumeroDocumento(String numeroDocumento) {

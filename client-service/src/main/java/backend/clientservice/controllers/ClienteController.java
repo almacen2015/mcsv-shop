@@ -6,12 +6,11 @@ import backend.clientservice.services.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -31,8 +30,10 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDTO>> listAll() {
-        return new ResponseEntity<>(clienteService.listAll(), HttpStatus.OK);
+    public ResponseEntity<Page<ClienteResponseDTO>> listAll(@RequestParam Integer page,
+                                                            @RequestParam Integer size,
+                                                            @RequestParam String orderBy) {
+        return new ResponseEntity<>(clienteService.listAll(page, size, orderBy), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
