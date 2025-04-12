@@ -11,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -287,9 +291,9 @@ class ClienteServiceImplTest {
 
     @Test
     void testListAll_whenDataEmpty_returnEmpty() {
-        when(repository.findAll()).thenReturn(List.of());
+        when(repository.findAll(any(Pageable.class))).thenReturn(Page.empty());
 
-        List<ClienteResponseDTO> clientes = service.listAll();
+        Page<ClienteResponseDTO> clientes = service.listAll(1, 10, "id");
 
         assertThat(clientes).isEmpty();
     }
@@ -312,11 +316,13 @@ class ClienteServiceImplTest {
                 .fechaNacimiento(LocalDate.of(1994, 5, 4))
                 .build();
 
-        when(repository.findAll()).thenReturn(List.of(cliente1, cliente2));
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Cliente> listClientes = List.of(cliente1, cliente2);
 
-        List<ClienteResponseDTO> clientes = service.listAll();
+        when(repository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(listClientes, pageable, listClientes.size()));
 
-        assertEquals(2, clientes.size());
+        Page<ClienteResponseDTO> clientes = service.listAll(1, 10, "id");
+
         assertThat(clientes).hasSize(2);
     }
 }

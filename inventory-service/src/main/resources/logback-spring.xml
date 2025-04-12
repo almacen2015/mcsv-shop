@@ -1,6 +1,6 @@
 <configuration>
     <!-- Define una variable para el nombre del microservicio -->
-    <property name="LOG_FILE" value="inventory-service/logs/inventario.log"/>
+    <property name="LOG_FILE" value="./inventory-service/logs/inventario.log"/>
 
     <!-- Appender para la consola -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

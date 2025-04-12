@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,7 +53,7 @@ class ClienteControllerTest {
 
         when(service.getByDocumentNumber("12345678", TipoDocumento.DNI.name())).thenReturn(client);
         // Act
-        mockMvc.perform(get("/api/clientes/document/{documentNumber}/{documentType}","12345678","DNI")
+        mockMvc.perform(get("/api/clientes/document/{documentNumber}/{documentType}", "12345678", "DNI")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -115,14 +119,15 @@ class ClienteControllerTest {
 
     @Test
     void testListAll_whenDataNotFound_returnEmpty() throws Exception {
-        when(service.listAll()).thenReturn(List.of());
+        when(service.listAll(1, 10, "id")).thenReturn(Page.empty());
         // Act
         mockMvc.perform(get("/api/clientes")
+                        .param("page", "1")
+                        .param("size", "10")
+                        .param("orderBy", "id")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
-
-        verify(service, times(1)).listAll();
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @Test
@@ -145,15 +150,20 @@ class ClienteControllerTest {
                 "11111111"
         );
 
-        when(service.listAll()).thenReturn(List.of(cliente1, cliente2));
+        List<ClienteResponseDTO> listClientes = List.of(cliente1, cliente2);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(service.listAll(1, 10, "id")).thenReturn(new PageImpl<>(listClientes, pageable, listClientes.size()));
+
         // Act
         mockMvc.perform(get("/api/clientes")
+                        .param("page", "1")
+                        .param("size", "10")
+                        .param("orderBy", "id")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[1].id").value(2));
-
-        verify(service, times(1)).listAll();
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[1].id").value(2));
     }
 
 }
