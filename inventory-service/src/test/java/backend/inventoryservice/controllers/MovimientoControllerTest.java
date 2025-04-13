@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MovimientoController.class)
+@WebMvcTest(InventoryController.class)
 @Import(TestSecurityConfig.class)
 class MovimientoControllerTest {
 

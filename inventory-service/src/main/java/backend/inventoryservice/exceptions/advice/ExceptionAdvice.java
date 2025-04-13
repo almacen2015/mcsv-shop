@@ -1,6 +1,6 @@
 package backend.inventoryservice.exceptions.advice;
 
-import backend.inventoryservice.exceptions.MovimientoException;
+import backend.inventoryservice.exceptions.InventoryException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,14 +15,18 @@ import java.util.Set;
 public class ExceptionAdvice {
 
     private static final Set<String> ERRORES_VALIDACION = Set.of(
-            MovimientoException.INVALID_AMOUNT,
-            MovimientoException.INVALID_TYPE_MOVEMENT,
-            MovimientoException.INVALID_PRODUCT,
-            MovimientoException.INVALID_ID
+            InventoryException.INVALID_AMOUNT,
+            InventoryException.INVALID_TYPE_MOVEMENT,
+            InventoryException.MOVEMENT_WITHOUT_STOCK,
+            InventoryException.INVALID_PRODUCT,
+            InventoryException.INVALID_ID,
+            InventoryException.PAGE_NUMBER_INVALID,
+            InventoryException.SIZE_NUMBER_INVALID,
+            InventoryException.SORT_NAME_INVALID
     );
 
-    @ExceptionHandler(MovimientoException.class)
-    public ResponseEntity<?> exceptionHandler(MovimientoException e) {
+    @ExceptionHandler(InventoryException.class)
+    public ResponseEntity<?> exceptionHandler(InventoryException e) {
         log.error(e.getMessage());
         HttpStatus status = ERRORES_VALIDACION.contains(e.getMessage()) ?
                 HttpStatus.BAD_REQUEST :

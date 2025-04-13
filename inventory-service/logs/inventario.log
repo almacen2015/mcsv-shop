@@ -34,7 +34,7 @@
 2025-02-06 19:11:41 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2025-02-06 19:11:41 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
 2025-02-06 19:12:38 [http-nio-8080-exec-1] ERROR b.m.advice.ExceptionAdvice - La cantidad del movimiento es inválida
-backend.inventoryservice.exceptions.MovimientoException: La cantidad del movimiento es inválida
+backend.inventoryservice.exceptions.InventoryException: La cantidad del movimiento es inválida
 	at backend.inventoryservice.services.impl.MovimientoServiceImpl.sonDatosValidos(MovimientoServiceImpl.java:67)
 	at backend.inventoryservice.services.impl.MovimientoServiceImpl.registrarMovimiento(MovimientoServiceImpl.java:40)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -49,7 +49,7 @@ backend.inventoryservice.exceptions.MovimientoException: La cantidad del movimie
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:727)
 	at backend.inventoryservice.services.impl.MovimientoServiceImpl$$SpringCGLIB$$0.registrarMovimiento(<generated>)
-	at backend.inventoryservice.controllers.MovimientoController.registrarMovimiento(MovimientoController.java:33)
+	at backend.inventoryservice.controllers.InventoryController.registrarMovimiento(MovimientoController.java:33)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -100,3 +100,4 @@ backend.inventoryservice.exceptions.MovimientoException: La cantidad del movimie
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2025-04-13 12:01:20 [http-nio-8080-exec-1] ERROR b.i.e.advice.ExceptionAdvice - Sort name is invalid

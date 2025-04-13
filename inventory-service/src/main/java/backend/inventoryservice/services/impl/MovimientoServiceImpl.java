@@ -1,7 +1,7 @@
 package backend.inventoryservice.services.impl;
 
 import backend.inventoryservice.client.ProductoClient;
-import backend.inventoryservice.exceptions.MovimientoException;
+import backend.inventoryservice.exceptions.InventoryException;
 import backend.inventoryservice.mappers.MovimientoMapper;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
@@ -10,7 +10,9 @@ import backend.inventoryservice.models.entities.Movimiento;
 import backend.inventoryservice.models.entities.TipoMovimiento;
 import backend.inventoryservice.repositories.MovimientoRepository;
 import backend.inventoryservice.services.MovimientoService;
+import backend.inventoryservice.util.Paginado;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,13 +33,21 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
-    public List<MovimientoDtoResponse> listByIdProducto(Integer idProducto) {
-        validateId(idProducto);
-        List<Movimiento> movimientos = movimientoRepository.findByProductoId(idProducto);
-        if (!movimientos.isEmpty()) {
-            return movimientoMapper.toListDto(movimientos);
+    public Page<MovimientoDtoResponse> listByIdProducto(Integer productId, Paginado paginado) {
+        validatePaginado(paginado.page(), paginado.size(), paginado.orderBy());
+        validateId(productId);
+
+        Pageable pageable = constructPageable(paginado.page(), paginado.size(), paginado.orderBy());
+
+        Page<Movimiento> movimientos = movimientoRepository.findAllByProductoId(productId, pageable);
+        if (movimientos.isEmpty()) {
+            return null;
         }
-        return List.of();
+
+        List<MovimientoDtoResponse> response = movimientos.getContent().stream()
+                .map(movimientoMapper::toDto).toList();
+
+        return new PageImpl<>(response, pageable, movimientos.getTotalElements());
     }
 
     @Override
@@ -60,33 +70,51 @@ public class MovimientoServiceImpl implements MovimientoService {
 
     private void validateStock(Integer stock, String tipoMovimiento) {
         if (Objects.equals(tipoMovimiento, TipoMovimiento.SALIDA.name()) && stock <= 0) {
-            throw new MovimientoException(MovimientoException.MOVEMENT_WITHOUT_STOCK);
+            throw new InventoryException(InventoryException.MOVEMENT_WITHOUT_STOCK);
         }
     }
 
     private ProductoDtoResponse getProduct(Integer productoId) {
         Optional<ProductoDtoResponse> producto = Optional.ofNullable(productoClient.getProduct(productoId));
         if (producto.isEmpty()) {
-            throw new MovimientoException(MovimientoException.INVALID_PRODUCT);
+            throw new InventoryException(InventoryException.INVALID_PRODUCT);
         }
         return producto.get();
     }
 
     private void validateId(Integer id) {
         if (id == null || id <= 0) {
-            throw new MovimientoException(MovimientoException.INVALID_ID);
+            throw new InventoryException(InventoryException.INVALID_ID);
         }
     }
 
     private void validateData(Integer cantidad, String tipoMovimiento, Integer idProducto) {
         if (cantidad == null || cantidad <= 0) {
-            throw new MovimientoException(MovimientoException.INVALID_AMOUNT);
+            throw new InventoryException(InventoryException.INVALID_AMOUNT);
         }
 
         if (tipoMovimiento == null || tipoMovimiento.isBlank()) {
-            throw new MovimientoException(MovimientoException.INVALID_TYPE_MOVEMENT);
+            throw new InventoryException(InventoryException.INVALID_TYPE_MOVEMENT);
         }
 
         validateId(idProducto);
+    }
+
+    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
+        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
+    }
+
+    private void validatePaginado(Integer page, Integer size, String orderBy) {
+        if (page <= 0) {
+            throw new InventoryException(InventoryException.PAGE_NUMBER_INVALID);
+        }
+
+        if (size <= 0) {
+            throw new InventoryException(InventoryException.SIZE_NUMBER_INVALID);
+        }
+
+        if (orderBy == null || orderBy.isBlank()) {
+            throw new InventoryException(InventoryException.SORT_NAME_INVALID);
+        }
     }
 }

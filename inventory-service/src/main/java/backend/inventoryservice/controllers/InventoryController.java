@@ -3,10 +3,12 @@ package backend.inventoryservice.controllers;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
 import backend.inventoryservice.services.MovimientoService;
+import backend.inventoryservice.util.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/movimientos")
 @SecurityRequirement(name = "BearerAuth")
-public class MovimientoController {
+public class InventoryController {
 
     private final MovimientoService movimientoService;
 
-    public MovimientoController(MovimientoService movimientoService) {
+    public InventoryController(MovimientoService movimientoService) {
         this.movimientoService = movimientoService;
     }
 
@@ -47,9 +49,9 @@ public class MovimientoController {
             @ApiResponse(responseCode = "401", description = "No autorizado"),
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
-    @GetMapping("/{idProducto}")
-    public ResponseEntity<List<MovimientoDtoResponse>> listByIdProducto(@PathVariable Integer idProducto) {
-        List<MovimientoDtoResponse> response = movimientoService.listByIdProducto(idProducto);
+    @PostMapping("/{idProducto}")
+    public ResponseEntity<Page<MovimientoDtoResponse>> listByIdProducto(@PathVariable Integer idProducto, @RequestBody Paginado paginado) {
+        Page<MovimientoDtoResponse> response = movimientoService.listByIdProducto(idProducto, paginado);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
 package backend.inventoryservice.services.impl;
 
 import backend.inventoryservice.client.ProductoClient;
-import backend.inventoryservice.exceptions.MovimientoException;
+import backend.inventoryservice.exceptions.InventoryException;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
 import backend.inventoryservice.models.dtos.ProductoDtoResponse;
@@ -40,7 +40,7 @@ class MovimientoServiceImplTest {
         Integer idProducto = 0;
 
         // Act
-        assertThrows(MovimientoException.class, () -> service.listByIdProducto(idProducto));
+        assertThrows(InventoryException.class, () -> service.listByIdProducto(idProducto));
     }
 
     @Test
@@ -85,7 +85,7 @@ class MovimientoServiceImplTest {
         // Act
         when(productoClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 0));
 
-        assertThrows(MovimientoException.class, () -> service.add(dto));
+        assertThrows(InventoryException.class, () -> service.add(dto));
         // Assert
     }
 
@@ -97,7 +97,7 @@ class MovimientoServiceImplTest {
         // Act
         when(productoClient.getProduct(1)).thenReturn(null);
 
-        assertThrows(MovimientoException.class, () -> service.add(dto));
+        assertThrows(InventoryException.class, () -> service.add(dto));
         // Assert
     }
 
@@ -108,7 +108,7 @@ class MovimientoServiceImplTest {
 
         // Act
 
-        assertThrows(MovimientoException.class, () -> service.add(dto));
+        assertThrows(InventoryException.class, () -> service.add(dto));
         // Assert
     }
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-@FeignClient(name = "mcsv-productos", url = "${product.service.url}")
+@FeignClient(name = "products-service", url = "${product.service.url}")
 public interface ProductoClient {
 
     @GetMapping("/{id}")
