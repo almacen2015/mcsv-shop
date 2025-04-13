@@ -4,21 +4,26 @@ import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
 import backend.inventoryservice.security.TestSecurityConfig;
 import backend.inventoryservice.services.MovimientoService;
+import backend.inventoryservice.util.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,27 +48,39 @@ class MovimientoControllerTest {
 
     @Test
     void testListarMovimientosPorProducto_dadoQueNoHayMovimientos() throws Exception {
+
+        Paginado paginado = new Paginado(1, 10, "id");
+        String json = objectMapper.writeValueAsString(paginado);
         // Arrange
-        when(service.listByIdProducto(2)).thenReturn(List.of());
+        when(service.listByIdProducto(any(Integer.class), any(Paginado.class))).thenReturn(Page.empty());
+
         // Act
-        mockMvc.perform(get("/api/movimiento/2")
+        mockMvc.perform(post("/api/movimientos/2")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @Test
     void testListarMovimientosPorProducto() throws Exception {
         // Arrange
         MovimientoDtoResponse response = new MovimientoDtoResponse(10, 1, 5, "ENTRADA", "2025-01-01");
-        when(service.listByIdProducto(1)).thenReturn(List.of(response));
+        Paginado paginado = new Paginado(1, 10, "id");
+        Pageable pageable = PageRequest.of(0, 10);
+        String json = objectMapper.writeValueAsString(paginado);
+
+        List<MovimientoDtoResponse> listResponse = List.of(response);
+
+        when(service.listByIdProducto(any(Integer.class), any(Paginado.class))).thenReturn(new PageImpl<>(listResponse, pageable, listResponse.size()));
         // Act
-        mockMvc.perform(get("/api/movimiento/1")
+        mockMvc.perform(post("/api/movimientos/1")
+                        .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(10))
-                .andExpect(jsonPath("$[0].productoId").value(1))
-                .andExpect(jsonPath("$[0].cantidad").value(5));
+                .andExpect(jsonPath("$.content[0].id").value(10))
+                .andExpect(jsonPath("$.content[0].productoId").value(1))
+                .andExpect(jsonPath("$.content[0].cantidad").value(5));
     }
 
     @Test
@@ -75,7 +92,7 @@ class MovimientoControllerTest {
 
         when(service.add(any(MovimientoDtoRequest.class))).thenReturn(response);
         // Act
-        mockMvc.perform(post("/api/movimiento")
+        mockMvc.perform(post("/api/movimientos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());

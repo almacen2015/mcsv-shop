@@ -8,11 +8,16 @@ import backend.inventoryservice.models.dtos.ProductoDtoResponse;
 import backend.inventoryservice.models.entities.Movimiento;
 import backend.inventoryservice.models.entities.TipoMovimiento;
 import backend.inventoryservice.repositories.MovimientoRepository;
+import backend.inventoryservice.util.Paginado;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,20 +44,22 @@ class MovimientoServiceImplTest {
         // Arrange
         Integer idProducto = 0;
 
+        Paginado paginado = new Paginado(1, 10, "id");
+
         // Act
-        assertThrows(InventoryException.class, () -> service.listByIdProducto(idProducto));
+        assertThrows(InventoryException.class, () -> service.listByIdProducto(idProducto, paginado));
     }
 
     @Test
     void testListarMovimientosPorProducto_DadoProductoNoTieneMovimientos_RetornaListaVacia() {
         // Arrange
-        when(movimientoRepository.findByProductoId(1)).thenReturn(List.of());
-
+        when(movimientoRepository.findAllByProductoId(any(Integer.class), any(Pageable.class))).thenReturn(Page.empty());
+        Paginado paginado = new Paginado(1, 10, "id");
         // Act
-        List<MovimientoDtoResponse> movimientos = service.listByIdProducto(1);
+        Page<MovimientoDtoResponse> movimientos = service.listByIdProducto(1, paginado);
 
         // Assert
-        assertTrue(movimientos.isEmpty());
+        assertNull(movimientos);
     }
 
     @Test
@@ -66,15 +73,20 @@ class MovimientoServiceImplTest {
                 .fechaRegistro(LocalDateTime.of(2021, 10, 10, 10, 10, 10))
                 .build();
 
-        when(movimientoRepository.findByProductoId(1)).thenReturn(java.util.List.of(movimiento));
+        List<Movimiento> listMovimientos = List.of(movimiento);
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Paginado paginado = new Paginado(1, 10, "id");
+
+        when(movimientoRepository.findAllByProductoId(any(Integer.class), any(Pageable.class))).thenReturn(new PageImpl<>(listMovimientos, pageable, listMovimientos.size()));
 
         // Act
-        List<MovimientoDtoResponse> movimientos = service.listByIdProducto(1);
+        Page<MovimientoDtoResponse> movimientos = service.listByIdProducto(1, paginado);
 
         // Assert
         assertNotNull(movimientos);
-        assertEquals(1, movimientos.size());
-        assertEquals(1, movimientos.get(0).id());
+        assertEquals(movimientos.getContent().size(), listMovimientos.size());
     }
 
     @Test
