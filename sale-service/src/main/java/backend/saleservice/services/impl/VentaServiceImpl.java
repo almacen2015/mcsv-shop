@@ -3,7 +3,7 @@ package backend.saleservice.services.impl;
 import backend.saleservice.client.ClientFeign;
 import backend.saleservice.client.MovementClient;
 import backend.saleservice.client.ProductClient;
-import backend.saleservice.exceptions.VentaException;
+import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
 import backend.saleservice.models.documents.Venta;
 import backend.saleservice.models.dtos.request.MovimientoDtoRequest;
@@ -94,16 +94,19 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public List<VentaResponseDto> getAll() {
-        List<Venta> ventas = repository.findAll();
+    public Page<VentaResponseDto> getAll(Integer page, Integer size, String orderBy) {
+        validatePaginado(page, size, orderBy);
+        Pageable pageable = constructPageable(page, size, orderBy);
+
+        Page<Venta> ventas = repository.findAll(pageable);
         List<VentaResponseDto> response = new ArrayList<>();
-        for (Venta venta : ventas) {
+        for (Venta venta : ventas.getContent()) {
             ClienteResponseDTO client = clientFeign.getClient(venta.getClientId().longValue());
             String fullNameClient = getFullNameClient(client.nombre(), client.apellido());
             VentaResponseDto ventaDto = new VentaResponseDto(venta.getId(), fullNameClient, venta.getDate().toString(), venta.getTotal(), venta.getDetails());
             response.add(ventaDto);
         }
-        return response;
+        return new PageImpl<>(response, pageable, ventas.getTotalElements());
     }
 
     private String getFullNameClient(String nombre, String apellido) {
@@ -119,7 +122,7 @@ public class VentaServiceImpl implements VentaService {
 
     private ClienteResponseDTO validateClientId(Integer id) {
         if (id == null || id <= 0) {
-            throw new VentaException(VentaException.CLIENT_ID_INVALID);
+            throw new SaleException(SaleException.CLIENT_ID_INVALID);
         }
 
         ClienteResponseDTO client = clientFeign.getClient(id.longValue());
@@ -132,15 +135,15 @@ public class VentaServiceImpl implements VentaService {
 
     private void validatePaginado(Paginado paginado) {
         if (paginado.page() <= 0) {
-            throw new VentaException(VentaException.PAGE_NUMBER_INVALID);
+            throw new SaleException(SaleException.PAGE_NUMBER_INVALID);
         }
 
         if (paginado.size() <= 0) {
-            throw new VentaException(VentaException.SIZE_NUMBER_INVALID);
+            throw new SaleException(SaleException.SIZE_NUMBER_INVALID);
         }
 
         if (paginado.orderBy() == null || paginado.orderBy().isBlank()) {
-            throw new VentaException(VentaException.SORT_NAME_INVALID);
+            throw new SaleException(SaleException.SORT_NAME_INVALID);
         }
     }
 
@@ -148,7 +151,7 @@ public class VentaServiceImpl implements VentaService {
         Set<Integer> productIds = new HashSet<>();
 
         if (details == null || details.isEmpty()) {
-            throw new VentaException(VentaException.DETAILS_INVALID);
+            throw new SaleException(SaleException.DETAILS_INVALID);
         }
 
         for (DetalleVenta detail : details) {
@@ -156,7 +159,7 @@ public class VentaServiceImpl implements VentaService {
 
             ProductoDtoResponse product = productClient.getProduct(detail.getProductId());
             if (!productIds.add(detail.getProductId())) {
-                throw new VentaException(VentaException.PRODUCT_REPEATED);
+                throw new SaleException(SaleException.PRODUCT_REPEATED);
             }
 
             validateProduct(product);
@@ -169,25 +172,43 @@ public class VentaServiceImpl implements VentaService {
 
     private void validateProduct(ProductoDtoResponse product) {
         if (Optional.ofNullable(product).isEmpty()) {
-            throw new VentaException(VentaException.PRODUCT_NOT_FOUND);
+            throw new SaleException(SaleException.PRODUCT_NOT_FOUND);
         }
     }
 
     private void validateProductId(Integer id) {
         if (id == null || id >= 0) {
-            throw new VentaException(VentaException.PRODUCT_ID_INVALID);
+            throw new SaleException(SaleException.PRODUCT_ID_INVALID);
         }
     }
 
     private void validateQuantity(Integer quantity) {
         if (quantity == null || quantity <= 0) {
-            throw new VentaException(VentaException.QUANTITY_INVALID);
+            throw new SaleException(SaleException.QUANTITY_INVALID);
         }
     }
 
     private void validateQuantityGreaterThanStock(Integer quantity, Integer stock) {
         if (quantity > stock) {
-            throw new VentaException(VentaException.QUANTITY_GREATER_THAN_STOCK);
+            throw new SaleException(SaleException.QUANTITY_GREATER_THAN_STOCK);
+        }
+    }
+
+    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
+        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
+    }
+
+    private void validatePaginado(Integer page, Integer size, String orderBy) {
+        if (page <= 0) {
+            throw new SaleException(SaleException.PAGE_NUMBER_INVALID);
+        }
+
+        if (size <= 0) {
+            throw new SaleException(SaleException.SIZE_NUMBER_INVALID);
+        }
+
+        if (orderBy == null || orderBy.isBlank()) {
+            throw new SaleException(SaleException.SORT_NAME_INVALID);
         }
     }
 }

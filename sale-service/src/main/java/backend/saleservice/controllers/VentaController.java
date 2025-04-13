@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/ventas")
 public class VentaController {
@@ -43,8 +41,10 @@ public class VentaController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @GetMapping
-    public ResponseEntity<List<VentaResponseDto>> list() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    public ResponseEntity<Page<VentaResponseDto>> list(@RequestParam Integer page,
+                                                       @RequestParam Integer size,
+                                                       @RequestParam String orderBy) {
+        return new ResponseEntity<>(service.getAll(page, size, orderBy), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

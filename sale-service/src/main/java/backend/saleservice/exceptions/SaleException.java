@@ -1,6 +1,6 @@
 package backend.saleservice.exceptions;
 
-public class VentaException extends RuntimeException {
+public class SaleException extends RuntimeException {
     public static final String CLIENT_ID_INVALID = "Client id invalid";
     public static final String PRODUCT_ID_INVALID = "Product id invalid";
     public static final String DETAILS_INVALID = "Details invalid";
@@ -12,7 +12,7 @@ public class VentaException extends RuntimeException {
     public static final String SIZE_NUMBER_INVALID = "Size number can't be less or equals than 0";
     public static final String SORT_NAME_INVALID = "Sort name is invalid";
 
-    public VentaException(String message) {
+    public SaleException(String message) {
         super(message);
     }
 }

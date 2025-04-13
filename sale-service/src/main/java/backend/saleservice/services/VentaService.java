@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface VentaService {
-    List<VentaResponseDto> getAll();
+    Page<VentaResponseDto> getAll(Integer page, Integer size, String orderBy);
 
     VentaResponseDto add(VentaRequestDto requestDto);
 

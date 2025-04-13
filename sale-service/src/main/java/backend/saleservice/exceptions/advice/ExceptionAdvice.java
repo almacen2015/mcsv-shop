@@ -1,6 +1,6 @@
 package backend.saleservice.exceptions.advice;
 
-import backend.saleservice.exceptions.VentaException;
+import backend.saleservice.exceptions.SaleException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,20 +15,20 @@ import java.util.Set;
 public class ExceptionAdvice {
 
     public static Set<String> errors = Set.of(
-            VentaException.PRODUCT_ID_INVALID,
-            VentaException.QUANTITY_INVALID,
-            VentaException.CLIENT_ID_INVALID,
-            VentaException.DETAILS_INVALID,
-            VentaException.PRODUCT_NOT_FOUND,
-            VentaException.PRODUCT_REPEATED,
-            VentaException.PAGE_NUMBER_INVALID,
-            VentaException.SIZE_NUMBER_INVALID,
-            VentaException.SORT_NAME_INVALID,
-            VentaException.QUANTITY_GREATER_THAN_STOCK
+            SaleException.PRODUCT_ID_INVALID,
+            SaleException.QUANTITY_INVALID,
+            SaleException.CLIENT_ID_INVALID,
+            SaleException.DETAILS_INVALID,
+            SaleException.PRODUCT_NOT_FOUND,
+            SaleException.PRODUCT_REPEATED,
+            SaleException.PAGE_NUMBER_INVALID,
+            SaleException.SIZE_NUMBER_INVALID,
+            SaleException.SORT_NAME_INVALID,
+            SaleException.QUANTITY_GREATER_THAN_STOCK
     );
 
-    @ExceptionHandler(VentaException.class)
-    public ResponseEntity<String> handleClienteException(VentaException e) {
+    @ExceptionHandler(SaleException.class)
+    public ResponseEntity<String> handleClienteException(SaleException e) {
         log.error(e.getMessage(), e);
 
         HttpStatus status = errors.contains(e.getMessage()) ?
