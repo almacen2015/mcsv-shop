@@ -6,6 +6,7 @@ import backend.saleservice.models.documents.Venta;
 import backend.saleservice.models.dtos.response.ClienteResponseDTO;
 import backend.saleservice.models.dtos.response.VentaResponseDto;
 import backend.saleservice.repositories.VentaRepository;
+import backend.saleservice.util.Paginado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -42,7 +43,46 @@ class VentaServiceImplTest {
     }
 
     @Test
-    void findAll_whenVentaNoExists_returnsEmptyList() {
+    void getSalesByClient_whenSalesNoExists_returnsEmptyList() {
+        Paginado paginado = new Paginado(1, 10, "id");
+        when(repository.findByClientId(any(Integer.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        Page<VentaResponseDto> response = service.getSalesByClient(1, paginado);
+
+        assertThat(response.getContent()).isEmpty();
+    }
+
+    @Test
+    void getSalesByClient_whenSalesExists_returnsPageVentas() {
+        DetalleVenta detalleVenta1 = createDetalleVenta(1, 10, 10.00, 100.00);
+        DetalleVenta detalleVenta2 = createDetalleVenta(2, 5, 20.00, 200.00);
+
+        List<DetalleVenta> detalles = List.of(detalleVenta1, detalleVenta2);
+
+        Venta venta1 = createVenta("1", 1, detalles);
+        Venta venta2 = createVenta("2", 1, detalles);
+
+        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO(
+                1L,
+                "VICTOR",
+                "ORBEGOZO",
+                "DNI",
+                "2000-10-10",
+                "12345678");
+
+        List<Venta> ventas = List.of(venta1, venta2);
+        Paginado paginado = new Paginado(1, 10, "id");
+
+        when(repository.findByClientId(any(Integer.class), any(Pageable.class))).thenReturn(new PageImpl<>(ventas));
+        when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
+
+        Page<VentaResponseDto> response = service.getSalesByClient(1, paginado);
+
+        assertThat(response.getContent().size()).isEqualTo(2);
+    }
+
+    @Test
+    void getAll_whenVentaNoExists_returnsEmptyList() {
         when(repository.findAll(any(Pageable.class))).thenReturn(Page.empty());
 
         Page<VentaResponseDto> response = service.getAll(1, 10, "id");
@@ -51,38 +91,16 @@ class VentaServiceImplTest {
     }
 
     @Test
-    void findAll_whenVentaExists_returnPageVenta() {
-        DetalleVenta detalleVenta = DetalleVenta.builder()
-                .productId(1)
-                .quantity(10)
-                .unitPrice(10.00)
-                .subTotal(100.00)
-                .build();
+    void getAll_whenVentaExists_returnsPageVenta() {
+        DetalleVenta detalleVenta1 = createDetalleVenta(1, 10, 10.00, 100.00);
+        DetalleVenta detalleVenta2 = createDetalleVenta(2, 10, 20.00, 200.00);
 
-        DetalleVenta detalleVenta2 = DetalleVenta.builder()
-                .productId(2)
-                .quantity(10)
-                .unitPrice(20.00)
-                .subTotal(200.00)
-                .build();
+        List<DetalleVenta> detalles = List.of(detalleVenta1, detalleVenta2);
 
-        Venta venta = Venta.builder()
-                .id("1")
-                .clientId(1)
-                .date(LocalDateTime.now())
-                .total(100.00)
-                .details(List.of(detalleVenta, detalleVenta2))
-                .build();
+        Venta venta1 = createVenta("1", 1, detalles);
+        Venta venta2 = createVenta("2", 2, detalles);
 
-        Venta venta2 = Venta.builder()
-                .id("2")
-                .clientId(2)
-                .date(LocalDateTime.now())
-                .total(100.00)
-                .details(List.of(detalleVenta, detalleVenta2))
-                .build();
-
-        List<Venta> ventas = List.of(venta, venta2);
+        List<Venta> ventas = List.of(venta1, venta2);
 
         ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO(
                 1L,
@@ -99,5 +117,24 @@ class VentaServiceImplTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getContent().size()).isEqualTo(2);
+    }
+
+    private DetalleVenta createDetalleVenta(Integer productId, Integer quantity, Double unitPrice, Double subTotal) {
+        return DetalleVenta.builder()
+                .productId(productId)
+                .quantity(quantity)
+                .unitPrice(unitPrice)
+                .subTotal(subTotal)
+                .build();
+    }
+
+    private Venta createVenta(String id, Integer clientId, List<DetalleVenta> detalles) {
+        return Venta.builder()
+                .id(id)
+                .clientId(clientId)
+                .date(LocalDateTime.now())
+                .total(detalles.stream().mapToDouble(DetalleVenta::getSubTotal).sum())
+                .details(detalles)
+                .build();
     }
 }
