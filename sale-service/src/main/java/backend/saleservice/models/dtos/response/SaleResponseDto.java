@@ -4,7 +4,7 @@ import backend.saleservice.models.documents.DetalleVenta;
 
 import java.util.List;
 
-public record VentaResponseDto(
+public record SaleResponseDto(
         String id,
         String client,
         String date,

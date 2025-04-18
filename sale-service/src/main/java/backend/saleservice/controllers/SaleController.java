@@ -1,8 +1,8 @@
 package backend.saleservice.controllers;
 
-import backend.saleservice.models.dtos.request.VentaRequestDto;
-import backend.saleservice.models.dtos.response.VentaResponseDto;
-import backend.saleservice.services.VentaService;
+import backend.saleservice.models.dtos.request.SaleRequestDto;
+import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.saleservice.services.SaleService;
 import backend.saleservice.util.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/ventas")
-public class VentaController {
-    private final VentaService service;
+public class SaleController {
+    private final SaleService service;
 
-    public VentaController(VentaService service) {
+    public SaleController(SaleService service) {
         this.service = service;
     }
 
@@ -30,7 +30,7 @@ public class VentaController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @PostMapping
-    public ResponseEntity<VentaResponseDto> createVenta(@RequestBody VentaRequestDto requestDto) {
+    public ResponseEntity<SaleResponseDto> createVenta(@RequestBody SaleRequestDto requestDto) {
         return new ResponseEntity<>(service.add(requestDto), HttpStatus.OK);
     }
 
@@ -41,9 +41,9 @@ public class VentaController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @GetMapping
-    public ResponseEntity<Page<VentaResponseDto>> list(@RequestParam Integer page,
-                                                       @RequestParam Integer size,
-                                                       @RequestParam String orderBy) {
+    public ResponseEntity<Page<SaleResponseDto>> list(@RequestParam Integer page,
+                                                      @RequestParam Integer size,
+                                                      @RequestParam String orderBy) {
         return new ResponseEntity<>(service.getAll(page, size, orderBy), HttpStatus.OK);
     }
 
@@ -54,7 +54,7 @@ public class VentaController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @PostMapping("/client/{id}")
-    public ResponseEntity<Page<VentaResponseDto>> getByClient(@RequestBody Paginado paginado, @PathVariable Integer id) {
+    public ResponseEntity<Page<SaleResponseDto>> getByClient(@RequestBody Paginado paginado, @PathVariable Integer id) {
         return new ResponseEntity<>(service.getSalesByClient(id, paginado), HttpStatus.OK);
     }
 }

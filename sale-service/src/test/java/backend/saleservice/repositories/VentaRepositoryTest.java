@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class VentaRepositoryTest {
 
     @Autowired
-    private VentaRepository ventaRepository;
+    private SaleRepository ventaRepository;
 
     @BeforeEach
     void setUp() {

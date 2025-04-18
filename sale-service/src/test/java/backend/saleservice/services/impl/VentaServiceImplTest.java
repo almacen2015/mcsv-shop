@@ -6,14 +6,14 @@ import backend.saleservice.client.ProductClient;
 import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
 import backend.saleservice.models.documents.Venta;
-import backend.saleservice.models.dtos.request.DetalleVentaRequestDto;
-import backend.saleservice.models.dtos.request.MovimientoDtoRequest;
-import backend.saleservice.models.dtos.request.VentaRequestDto;
-import backend.saleservice.models.dtos.response.ClienteResponseDTO;
-import backend.saleservice.models.dtos.response.MovimientoDtoResponse;
-import backend.saleservice.models.dtos.response.ProductoDtoResponse;
-import backend.saleservice.models.dtos.response.VentaResponseDto;
-import backend.saleservice.repositories.VentaRepository;
+import backend.saleservice.models.dtos.request.DetailSaleRequestDto;
+import backend.saleservice.models.dtos.request.MovementRequestDto;
+import backend.saleservice.models.dtos.request.SaleRequestDto;
+import backend.saleservice.models.dtos.response.ClientResponseDTO;
+import backend.saleservice.models.dtos.response.MovementResponseDto;
+import backend.saleservice.models.dtos.response.ProductResponseDto;
+import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.saleservice.repositories.SaleRepository;
 import backend.saleservice.util.Paginado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 class VentaServiceImplTest {
 
     @Mock
-    private VentaRepository repository;
+    private SaleRepository repository;
 
     @Mock
     private ClientFeign clientFeign;
@@ -51,7 +51,7 @@ class VentaServiceImplTest {
     private MovementClient movementClient;
 
     @InjectMocks
-    private VentaServiceImpl service;
+    private SaleServiceImpl service;
 
     @BeforeEach
     void setUp() {
@@ -60,9 +60,9 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenPriceIsNotValid_returnsError() {
-        DetalleVentaRequestDto detalleVentaRequestDto = new DetalleVentaRequestDto(1, 10);
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(1, List.of(detalleVentaRequestDto));
-        ProductoDtoResponse productoDtoResponse = new ProductoDtoResponse(
+        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
+        ProductResponseDto productoDtoResponse = new ProductResponseDto(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -80,9 +80,9 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenStockIsNotValid_returnsError() {
-        DetalleVentaRequestDto detalleVentaRequestDto = new DetalleVentaRequestDto(1, 10);
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(1, List.of(detalleVentaRequestDto));
-        ProductoDtoResponse productoDtoResponse = new ProductoDtoResponse(
+        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
+        ProductResponseDto productoDtoResponse = new ProductResponseDto(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -100,11 +100,11 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenProductIsRepeated_returnsError() {
-        DetalleVentaRequestDto detalleVentaRequestDto = new DetalleVentaRequestDto(1, 10);
-        DetalleVentaRequestDto detalleVentaRequestDto2 = new DetalleVentaRequestDto(1, 5);
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(1, List.of(detalleVentaRequestDto, detalleVentaRequestDto2));
+        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
+        DetailSaleRequestDto detalleVentaRequestDto2 = new DetailSaleRequestDto(1, 5);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto, detalleVentaRequestDto2));
 
-        ProductoDtoResponse productoDtoResponse = new ProductoDtoResponse(
+        ProductResponseDto productoDtoResponse = new ProductResponseDto(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -123,8 +123,8 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenProductIdIsNotValid_returnsError() {
-        DetalleVentaRequestDto detalleVentaRequestDto = new DetalleVentaRequestDto(null, 10);
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(1, List.of(detalleVentaRequestDto));
+        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(null, 10);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
 
         SaleException exception = assertThrows(SaleException.class, () -> service.add(ventaRequestDto));
 
@@ -133,7 +133,7 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenDetailsIsEmpty_returnsError() {
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(1, null);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, null);
         SaleException exception = assertThrows(SaleException.class, () -> service.add(ventaRequestDto));
 
         assertThat(exception.getMessage()).isEqualTo(SaleException.DETAILS_INVALID);
@@ -141,8 +141,8 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenClientIdIsMinusOrEqualsZero_returnsError() {
-        DetalleVentaRequestDto detalleVentaRequestDto = new DetalleVentaRequestDto(1, 10);
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(-1, List.of(detalleVentaRequestDto));
+        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(-1, List.of(detalleVentaRequestDto));
 
         SaleException exception = assertThrows(SaleException.class, () -> service.add(ventaRequestDto));
 
@@ -155,10 +155,10 @@ class VentaServiceImplTest {
         List<DetalleVenta> detalles = List.of(detalleVenta1);
         Venta venta1 = createVenta("1", 1, detalles);
 
-        DetalleVentaRequestDto detalleVentaRequestDto = new DetalleVentaRequestDto(1, 10);
-        VentaRequestDto ventaRequestDto = new VentaRequestDto(1, List.of(detalleVentaRequestDto));
+        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
+        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
 
-        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO(
+        ClientResponseDTO clienteResponseDTO = new ClientResponseDTO(
                 1L,
                 "VICTOR",
                 "ORBEGOZO",
@@ -166,7 +166,7 @@ class VentaServiceImplTest {
                 "2000-10-10",
                 "12345678");
 
-        ProductoDtoResponse productoDtoResponse = new ProductoDtoResponse(
+        ProductResponseDto productoDtoResponse = new ProductResponseDto(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -176,14 +176,14 @@ class VentaServiceImplTest {
                 10
         );
 
-        MovimientoDtoResponse movimientoDtoResponse = new MovimientoDtoResponse(1, 1, 10, "SALIDA", "2025-10-10");
+        MovementResponseDto movimientoDtoResponse = new MovementResponseDto(1, 1, 10, "SALIDA", "2025-10-10");
 
         when(repository.save(any(Venta.class))).thenReturn(venta1);
         when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
         when(productClient.getProduct(any(Integer.class))).thenReturn(productoDtoResponse);
-        when(movementClient.createMovimientoDto(any(MovimientoDtoRequest.class))).thenReturn(movimientoDtoResponse);
+        when(movementClient.createMovimientoDto(any(MovementRequestDto.class))).thenReturn(movimientoDtoResponse);
 
-        VentaResponseDto response = service.add(ventaRequestDto);
+        SaleResponseDto response = service.add(ventaRequestDto);
 
         assertThat(response).isNotNull();
     }
@@ -225,7 +225,7 @@ class VentaServiceImplTest {
         Paginado paginado = new Paginado(1, 10, "id");
         when(repository.findByClientId(any(Integer.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        Page<VentaResponseDto> response = service.getSalesByClient(1, paginado);
+        Page<SaleResponseDto> response = service.getSalesByClient(1, paginado);
 
         assertThat(response.getContent()).isEmpty();
     }
@@ -240,7 +240,7 @@ class VentaServiceImplTest {
         Venta venta1 = createVenta("1", 1, detalles);
         Venta venta2 = createVenta("2", 1, detalles);
 
-        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO(
+        ClientResponseDTO clienteResponseDTO = new ClientResponseDTO(
                 1L,
                 "VICTOR",
                 "ORBEGOZO",
@@ -254,7 +254,7 @@ class VentaServiceImplTest {
         when(repository.findByClientId(any(Integer.class), any(Pageable.class))).thenReturn(new PageImpl<>(ventas));
         when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
 
-        Page<VentaResponseDto> response = service.getSalesByClient(1, paginado);
+        Page<SaleResponseDto> response = service.getSalesByClient(1, paginado);
 
         assertThat(response.getContent().size()).isEqualTo(2);
     }
@@ -284,7 +284,7 @@ class VentaServiceImplTest {
     void getAll_whenVentaNoExists_returnsEmptyList() {
         when(repository.findAll(any(Pageable.class))).thenReturn(Page.empty());
 
-        Page<VentaResponseDto> response = service.getAll(1, 10, "id");
+        Page<SaleResponseDto> response = service.getAll(1, 10, "id");
 
         assertThat(response.getContent()).isEmpty();
     }
@@ -301,7 +301,7 @@ class VentaServiceImplTest {
 
         List<Venta> ventas = List.of(venta1, venta2);
 
-        ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO(
+        ClientResponseDTO clienteResponseDTO = new ClientResponseDTO(
                 1L,
                 "VICTOR",
                 "ORBEGOZO",
@@ -312,7 +312,7 @@ class VentaServiceImplTest {
         when(repository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(ventas));
         when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
 
-        Page<VentaResponseDto> response = service.getAll(1, 10, "id");
+        Page<SaleResponseDto> response = service.getAll(1, 10, "id");
 
         assertThat(response).isNotNull();
         assertThat(response.getContent().size()).isEqualTo(2);

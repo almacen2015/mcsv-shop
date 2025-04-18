@@ -1,6 +1,6 @@
 package backend.saleservice.models.dtos.request;
 
-public record MovimientoDtoRequest(
+public record MovementRequestDto(
         Integer productoId,
         Integer cantidad,
         String tipoMovimiento) {
