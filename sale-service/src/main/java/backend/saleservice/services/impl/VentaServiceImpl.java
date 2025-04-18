@@ -115,6 +115,9 @@ public class VentaServiceImpl implements VentaService {
 
     private Double calculateSubtotal(Double precio, Integer quantity) {
         double subTotal;
+        if (precio == null || precio <= 0) {
+            throw new SaleException(SaleException.PRICE_INVALID);
+        }
         subTotal = precio * quantity;
         total = total + subTotal;
         return subTotal;
@@ -134,11 +137,11 @@ public class VentaServiceImpl implements VentaService {
     }
 
     private void validatePaginado(Paginado paginado) {
-        if (paginado.page() <= 0) {
+        if (paginado.page() == null || paginado.page() <= 0) {
             throw new SaleException(SaleException.PAGE_NUMBER_INVALID);
         }
 
-        if (paginado.size() <= 0) {
+        if (paginado.size() == null || paginado.size() <= 0) {
             throw new SaleException(SaleException.SIZE_NUMBER_INVALID);
         }
 
@@ -156,17 +159,21 @@ public class VentaServiceImpl implements VentaService {
 
         for (DetalleVenta detail : details) {
             validateQuantity(detail.getQuantity());
+            validateProductRepeated(detail, productIds);
 
             ProductoDtoResponse product = productClient.getProduct(detail.getProductId());
-            if (!productIds.add(detail.getProductId())) {
-                throw new SaleException(SaleException.PRODUCT_REPEATED);
-            }
-
             validateProduct(product);
+
             validateQuantityGreaterThanStock(detail.getQuantity(), product.stock());
 
             detail.setUnitPrice(product.precio());
             detail.setSubTotal(calculateSubtotal(product.precio(), detail.getQuantity()));
+        }
+    }
+
+    private void validateProductRepeated(DetalleVenta detail, Set<Integer> productIds) {
+        if (!productIds.add(detail.getProductId())) {
+            throw new SaleException(SaleException.PRODUCT_REPEATED);
         }
     }
 

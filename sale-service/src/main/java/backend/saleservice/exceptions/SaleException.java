@@ -11,6 +11,7 @@ public class SaleException extends RuntimeException {
     public static final String PAGE_NUMBER_INVALID = "Page number can't be less or equals than 0";
     public static final String SIZE_NUMBER_INVALID = "Size number can't be less or equals than 0";
     public static final String SORT_NAME_INVALID = "Sort name is invalid";
+    public static final String PRICE_INVALID = "Price is invalid";
 
     public SaleException(String message) {
         super(message);
