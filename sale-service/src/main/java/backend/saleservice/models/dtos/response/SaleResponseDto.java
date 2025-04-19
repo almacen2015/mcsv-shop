@@ -9,5 +9,5 @@ public record SaleResponseDto(
         String client,
         String date,
         Double total,
-        List<DetalleVenta> details) {
+        List<DetailSaleResponseDto> details) {
 }

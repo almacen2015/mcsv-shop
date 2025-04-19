@@ -9,8 +9,10 @@ import backend.saleservice.models.documents.Venta;
 import backend.saleservice.models.dtos.request.MovementRequestDto;
 import backend.saleservice.models.dtos.request.SaleRequestDto;
 import backend.saleservice.models.dtos.response.ClientResponseDTO;
+import backend.saleservice.models.dtos.response.DetailSaleResponseDto;
 import backend.saleservice.models.dtos.response.ProductResponseDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.saleservice.models.mapper.DetailSaleMapper;
 import backend.saleservice.models.mapper.SaleMapper;
 import backend.saleservice.repositories.SaleRepository;
 import backend.saleservice.services.SaleService;
@@ -26,6 +28,7 @@ import java.util.*;
 public class SaleServiceImpl implements SaleService {
     private final SaleRepository repository;
     private final SaleMapper saleMapper = SaleMapper.INSTANCE;
+    private final DetailSaleMapper detailSaleMapper = DetailSaleMapper.INSTANCE;
     private final ProductClient productClient;
     private final MovementClient movementClient;
     private final ClientFeign clientFeign;
@@ -51,13 +54,18 @@ public class SaleServiceImpl implements SaleService {
         List<SaleResponseDto> response = new ArrayList<>();
         if (!ventas.isEmpty()) {
             response = ventas.getContent().stream()
-                    .map(venta -> new SaleResponseDto(
-                            venta.getId(),
-                            getFullNameClient(client.nombre(), client.apellido()),
-                            venta.getDate().toString(),
-                            venta.getTotal(),
-                            venta.getDetails()
-                    )).toList();
+                    .map(venta -> {
+                        List<DetailSaleResponseDto> detalles = detailSaleMapper.toDtos(venta.getDetails());
+                        String fullNameClient = getFullNameClient(client.nombre(), client.apellido());
+
+                        return new SaleResponseDto(
+                                venta.getId(),
+                                fullNameClient,
+                                venta.getDate().toString(),
+                                venta.getTotal(),
+                                detalles);
+
+                    }).toList();
         }
         return new PageImpl<>(response, pageable, ventas.getTotalElements());
     }
@@ -77,17 +85,19 @@ public class SaleServiceImpl implements SaleService {
 
         fullName = getFullNameClient(client.nombre(), client.apellido());
 
-        SaleResponseDto response = new SaleResponseDto(ventaSaved.getId(), fullName, venta.getDate().toString(), venta.getTotal(), venta.getDetails());
+        List<DetailSaleResponseDto> detalles = detailSaleMapper.toDtos(venta.getDetails());
+
+        SaleResponseDto response = new SaleResponseDto(ventaSaved.getId(), fullName, venta.getDate().toString(), venta.getTotal(), detalles);
         addMovement(venta.getDetails());
 
         return response;
     }
 
     private void addMovement(List<DetalleVenta> details) {
-        final String TIPO_MOVIMIENTO = "SALIDA";
+        final String TIPO_MOVIMIENTO_SALIDA = "SALIDA";
 
         for (DetalleVenta detail : details) {
-            MovementRequestDto movimiento = new MovementRequestDto(detail.getProductId(), detail.getQuantity(), TIPO_MOVIMIENTO);
+            MovementRequestDto movimiento = new MovementRequestDto(detail.getProductId(), detail.getQuantity(), TIPO_MOVIMIENTO_SALIDA);
 
             movementClient.createMovimientoDto(movimiento);
         }
@@ -103,7 +113,10 @@ public class SaleServiceImpl implements SaleService {
         for (Venta venta : ventas.getContent()) {
             ClientResponseDTO client = clientFeign.getClient(venta.getClientId().longValue());
             String fullNameClient = getFullNameClient(client.nombre(), client.apellido());
-            SaleResponseDto ventaDto = new SaleResponseDto(venta.getId(), fullNameClient, venta.getDate().toString(), venta.getTotal(), venta.getDetails());
+
+            List<DetailSaleResponseDto> detalles = detailSaleMapper.toDtos(venta.getDetails());
+            SaleResponseDto ventaDto = new SaleResponseDto(venta.getId(), fullNameClient, venta.getDate().toString(), venta.getTotal(), detalles);
+
             response.add(ventaDto);
         }
         return new PageImpl<>(response, pageable, ventas.getTotalElements());
