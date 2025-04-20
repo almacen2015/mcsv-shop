@@ -37,6 +37,48 @@ class SaleControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    void getByClient_whenOrderByIsNotValid_returnsError() throws Exception {
+        Paginado paginado = new Paginado(1, 10, "");
+        String json = objectMapper.writeValueAsString(paginado);
+
+        when(service.getSalesByClient(1, paginado)).thenThrow(new SaleException(SaleException.SORT_NAME_INVALID));
+
+        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.SORT_NAME_INVALID));
+    }
+
+    @Test
+    void getByClient_whenSizeNumberIsNotValid_returnsError() throws Exception {
+        Paginado paginado = new Paginado(1, 0, "id");
+        String json = objectMapper.writeValueAsString(paginado);
+
+        when(service.getSalesByClient(1, paginado)).thenThrow(new SaleException(SaleException.SIZE_NUMBER_INVALID));
+
+        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.SIZE_NUMBER_INVALID));
+    }
+
+    @Test
+    void getByClient_whenPageNumberIsNotValid_returnsError() throws Exception {
+        Paginado paginado = new Paginado(0, 10, "id");
+        String json = objectMapper.writeValueAsString(paginado);
+
+        when(service.getSalesByClient(1, paginado)).thenThrow(new SaleException(SaleException.PAGE_NUMBER_INVALID));
+
+        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.PAGE_NUMBER_INVALID));
+    }
+
+    @Test
     void getByClient_whenIdIsNotValid_returnsError() throws Exception {
         Paginado paginado = new Paginado(1, 10, "id");
         String json = objectMapper.writeValueAsString(paginado);
