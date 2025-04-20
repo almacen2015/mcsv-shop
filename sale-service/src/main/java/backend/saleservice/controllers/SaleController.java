@@ -31,7 +31,7 @@ public class SaleController {
     })
     @PostMapping
     public ResponseEntity<SaleResponseDto> createVenta(@RequestBody SaleRequestDto requestDto) {
-        return new ResponseEntity<>(service.add(requestDto), HttpStatus.OK);
+        return new ResponseEntity<>(service.add(requestDto), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

@@ -1,6 +1,8 @@
 package backend.saleservice.controllers;
 
 import backend.saleservice.exceptions.SaleException;
+import backend.saleservice.models.dtos.request.DetailSaleRequestDto;
+import backend.saleservice.models.dtos.request.SaleRequestDto;
 import backend.saleservice.models.dtos.response.DetailSaleResponseDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
 import backend.saleservice.security.TestSecurityConfig;
@@ -8,6 +10,8 @@ import backend.saleservice.services.SaleService;
 import backend.saleservice.util.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -19,13 +23,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SaleController.class)
 @Import(TestSecurityConfig.class)
+@ExtendWith(MockitoExtension.class)
 class SaleControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -35,6 +41,119 @@ class SaleControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    void createVenta_whenStockIsZero_returnsError() throws Exception {
+        DetailSaleRequestDto detalle1 = new DetailSaleRequestDto(1, 5);
+        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detalle1));
+
+        final String json = objectMapper.writeValueAsString(requestDto);
+
+        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.QUANTITY_GREATER_THAN_STOCK));
+
+        mockMvc.perform(post("/api/ventas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.QUANTITY_GREATER_THAN_STOCK));
+
+        verify(service, times(1)).add(eq(requestDto));
+    }
+
+    @Test
+    void createVenta_whenDetailIsEmpty_returnsError() throws Exception {
+        SaleRequestDto requestDto = new SaleRequestDto(1, List.of());
+
+        final String json = objectMapper.writeValueAsString(requestDto);
+
+        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.DETAILS_INVALID));
+
+        mockMvc.perform(post("/api/ventas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.DETAILS_INVALID));
+
+        verify(service, times(1)).add(eq(requestDto));
+    }
+
+    @Test
+    void createVenta_whenClientIdIsNotValid_returnsError() throws Exception {
+        DetailSaleRequestDto detalle1 = new DetailSaleRequestDto(1, 10);
+        DetailSaleRequestDto detalle2 = new DetailSaleRequestDto(2, 5);
+        SaleRequestDto requestDto = new SaleRequestDto(null, List.of(detalle1, detalle2));
+
+        final String json = objectMapper.writeValueAsString(requestDto);
+
+        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.CLIENT_ID_INVALID));
+
+        mockMvc.perform(post("/api/ventas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.CLIENT_ID_INVALID));
+
+        verify(service, times(1)).add(eq(requestDto));
+    }
+
+    @Test
+    void createVenta_whenProductIdIsRepeated_returnsError() throws Exception {
+        DetailSaleRequestDto detalle1 = new DetailSaleRequestDto(1, 10);
+        DetailSaleRequestDto detalle2 = new DetailSaleRequestDto(1, 5);
+        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detalle1, detalle2));
+
+        final String json = objectMapper.writeValueAsString(requestDto);
+
+        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.PRODUCT_REPEATED));
+
+        mockMvc.perform(post("/api/ventas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.PRODUCT_REPEATED));
+
+        verify(service, times(1)).add(eq(requestDto));
+    }
+
+    @Test
+    void createVenta_whenProductIdIsNotValid_returnsError() throws Exception {
+        DetailSaleRequestDto detailSaleRequestDto = new DetailSaleRequestDto(0, 10);
+        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detailSaleRequestDto));
+
+        final String json = objectMapper.writeValueAsString(requestDto);
+
+        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.PRODUCT_ID_INVALID));
+
+        mockMvc.perform(post("/api/ventas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(SaleException.PRODUCT_ID_INVALID));
+
+        verify(service, times(1)).add(eq(requestDto));
+    }
+
+    @Test
+    void createVenta_whenDataIsValid_returnsVenta() throws Exception {
+        DetailSaleRequestDto detailSaleRequestDto = new DetailSaleRequestDto(1, 10);
+        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detailSaleRequestDto));
+
+        DetailSaleResponseDto detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
+        SaleResponseDto saleResponseDto1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1));
+
+        final String json = objectMapper.writeValueAsString(requestDto);
+
+        when(service.add(any(SaleRequestDto.class))).thenReturn(saleResponseDto1);
+
+        mockMvc.perform(post("/api/ventas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(saleResponseDto1.id()))
+                .andExpect(jsonPath("$.client").value(saleResponseDto1.client()));
+
+        verify(service, times(1)).add(eq(requestDto));
+    }
 
     @Test
     void getByClient_whenOrderByIsNotValid_returnsError() throws Exception {
@@ -48,6 +167,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.SORT_NAME_INVALID));
+
+        verify(service, times(1)).getSalesByClient(1, paginado);
     }
 
     @Test
@@ -62,6 +183,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.SIZE_NUMBER_INVALID));
+
+        verify(service, times(1)).getSalesByClient(1, paginado);
     }
 
     @Test
@@ -76,6 +199,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.PAGE_NUMBER_INVALID));
+
+        verify(service, times(1)).getSalesByClient(1, paginado);
     }
 
     @Test
@@ -90,6 +215,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.CLIENT_ID_INVALID));
+
+        verify(service, times(1)).getSalesByClient(0, paginado);
     }
 
     @Test
@@ -104,6 +231,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isEmpty());
+
+        verify(service, times(1)).getSalesByClient(1, paginado);
     }
 
     @Test
@@ -124,6 +253,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
+
+        verify(service, times(1)).getSalesByClient(1, paginado);
     }
 
     @Test
@@ -137,6 +268,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.SORT_NAME_INVALID));
+
+        verify(service, times(1)).getAll(1, 10, " ");
     }
 
     @Test
@@ -150,6 +283,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.SIZE_NUMBER_INVALID));
+
+        verify(service, times(1)).getAll(1, -1, "id");
     }
 
     @Test
@@ -163,6 +298,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(SaleException.PAGE_NUMBER_INVALID));
+
+        verify(service, times(1)).getAll(0, 10, "id");
     }
 
     @Test
@@ -176,6 +313,8 @@ class SaleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isEmpty());
+
+        verify(service, times(1)).getAll(1, 10, "id");
     }
 
     @Test
@@ -200,13 +339,15 @@ class SaleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
 
+        verify(service, times(1)).getAll(1, 10, "id");
+
     }
 
     private DetailSaleResponseDto constructDetailSaleResponseDto(Integer productId, Integer quantity, Double price, Double subTotal) {
         return new DetailSaleResponseDto(productId, quantity, price, subTotal);
     }
 
-    private SaleResponseDto constructSaleResponseDto(String id, String nameClient, String date, Double total, List<DetailSaleResponseDto> details) {
-        return new SaleResponseDto(id, nameClient, date, total, details);
+    private SaleResponseDto constructSaleResponseDto(String id, String client, String date, Double total, List<DetailSaleResponseDto> details) {
+        return new SaleResponseDto(id, client, date, total, details);
     }
 }
