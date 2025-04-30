@@ -8,7 +8,7 @@ services:
       - authentication
       - product
       - client
-      - movement
+      - inventory
       - sales
 
   authentication:
@@ -47,14 +47,14 @@ services:
     depends_on:
       - postgres
 
-  movement:
-    container_name: movement-service
+  inventory:
+    container_name: inventory-service
     build: ./inventory-service
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/inventario-db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/producto
+      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/products
     ports:
       - "8080:8080"
     depends_on:
@@ -65,9 +65,9 @@ services:
     build: ./sale-service
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/ventas-db
-      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/producto
-      - SPRING_MOVEMENT_SERVICE_URL=http://gateway:9000/api/movimiento
-      - SPRING_CLIENT_SERVICE_URL=http://gateway:9000/api/client
+      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/products
+      - SPRING_INVENTORY_SERVICE_URL=http://gateway:9000/api/inventory
+      - SPRING_CLIENT_SERVICE_URL=http://gateway:9000/api/clients
     ports:
       - "8085:8085"
     depends_on:

@@ -4,28 +4,28 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: producto-service
-          uri: http://product:8081/api/producto
+        - id: product-service
+          uri: http://product:8081/api/productos
           predicates:
-            - Path=/api/producto/**
+            - Path=/api/products/**
 
-        - id: movimiento-service
-          uri: http://movement:8080/api/movimiento
+        - id: inventory-service
+          uri: http://movement:8080/api/movimientos
           predicates:
-            - Path=/api/movimiento/**
+            - Path=/api/inventory/**
 
         - id: auth-service
           uri: http://authentication:8082/api/auth
           predicates:
             - Path=/api/auth/**
 
-        - id: ventas-service
+        - id: sale-service
           uri: http://sales:8085/api/ventas
           predicates:
-            - Path=/api/ventas/**
+            - Path=/api/sales/**
 
         - id: client-service
           uri: http://client:8083/api/clientes
           predicates:
-            - Path=/api/clientes/**
+            - Path=/api/clients/**
 
