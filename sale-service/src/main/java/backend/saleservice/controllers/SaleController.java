@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/ventas")
+@RequestMapping("/api/sales")
 public class SaleController {
     private final SaleService service;
 

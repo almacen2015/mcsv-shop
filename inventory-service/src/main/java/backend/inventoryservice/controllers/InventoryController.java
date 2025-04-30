@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/movimientos")
+@RequestMapping("/api/inventory")
 @SecurityRequirement(name = "BearerAuth")
 public class InventoryController {
 
