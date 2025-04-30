@@ -52,7 +52,7 @@ class ProductoControllerTest {
         when(service.update(any(ProductoDtoRequest.class), any(Integer.class))).thenReturn(producto);
 
         // Assert
-        mockMvc.perform(patch("/api/productos/{id}", 1)
+        mockMvc.perform(patch("/api/products/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -68,7 +68,7 @@ class ProductoControllerTest {
         doNothing().when(service).updateStock(1, 5, "SALIDA");
 
         // Assert
-        mockMvc.perform(put("/api/productos/stock/{idProducto}/{cantidad}/{tipoMovimiento}", 1, 5, "SALIDA"))
+        mockMvc.perform(put("/api/products/stock/{idProducto}/{cantidad}/{tipoMovimiento}", 1, 5, "SALIDA"))
                 .andExpect(status().isOk());
     }
 
@@ -86,7 +86,7 @@ class ProductoControllerTest {
         when(service.listByname("Producto 1", paginado)).thenReturn(new PageImpl<>(productos, pageable, productos.size()));
 
         // Assert
-        mockMvc.perform(post("/api/productos/nombre/{nombre}", "Producto 1")
+        mockMvc.perform(post("/api/products/nombre/{nombre}", "Producto 1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -106,7 +106,7 @@ class ProductoControllerTest {
         when(service.getById(1)).thenReturn(producto);
 
         // Assert
-        mockMvc.perform(get("/api/productos/{id}", 1))
+        mockMvc.perform(get("/api/products/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Producto 1"))
@@ -128,7 +128,7 @@ class ProductoControllerTest {
         when(service.listAll(1, 10, "id")).thenReturn(new PageImpl<>(productos, pageable, productos.size()));
 
         // Assert
-        mockMvc.perform(get("/api/productos")
+        mockMvc.perform(get("/api/products")
                         .param("page", "1")
                         .param("size", "10")
                         .param("orderBy", "id"))
@@ -158,7 +158,7 @@ class ProductoControllerTest {
         when(service.add(any(ProductoDtoRequest.class))).thenReturn(producto);
 
         // Assert
-        mockMvc.perform(post("/api/productos")
+        mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())

@@ -51,7 +51,7 @@ class SaleControllerTest {
 
         when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.QUANTITY_GREATER_THAN_STOCK));
 
-        mockMvc.perform(post("/api/ventas")
+        mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
@@ -68,7 +68,7 @@ class SaleControllerTest {
 
         when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.DETAILS_INVALID));
 
-        mockMvc.perform(post("/api/ventas")
+        mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
@@ -87,7 +87,7 @@ class SaleControllerTest {
 
         when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.CLIENT_ID_INVALID));
 
-        mockMvc.perform(post("/api/ventas")
+        mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
@@ -106,7 +106,7 @@ class SaleControllerTest {
 
         when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.PRODUCT_REPEATED));
 
-        mockMvc.perform(post("/api/ventas")
+        mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
@@ -124,7 +124,7 @@ class SaleControllerTest {
 
         when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.PRODUCT_ID_INVALID));
 
-        mockMvc.perform(post("/api/ventas")
+        mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
@@ -145,7 +145,7 @@ class SaleControllerTest {
 
         when(service.add(any(SaleRequestDto.class))).thenReturn(saleResponseDto1);
 
-        mockMvc.perform(post("/api/ventas")
+        mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
@@ -162,7 +162,7 @@ class SaleControllerTest {
 
         when(service.getSalesByClient(1, paginado)).thenThrow(new SaleException(SaleException.SORT_NAME_INVALID));
 
-        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+        mockMvc.perform(post("/api/sales/client/{id}", 1)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -178,7 +178,7 @@ class SaleControllerTest {
 
         when(service.getSalesByClient(1, paginado)).thenThrow(new SaleException(SaleException.SIZE_NUMBER_INVALID));
 
-        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+        mockMvc.perform(post("/api/sales/client/{id}", 1)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -194,7 +194,7 @@ class SaleControllerTest {
 
         when(service.getSalesByClient(1, paginado)).thenThrow(new SaleException(SaleException.PAGE_NUMBER_INVALID));
 
-        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+        mockMvc.perform(post("/api/sales/client/{id}", 1)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -210,7 +210,7 @@ class SaleControllerTest {
 
         when(service.getSalesByClient(0, paginado)).thenThrow(new SaleException(SaleException.CLIENT_ID_INVALID));
 
-        mockMvc.perform(post("/api/ventas/client/{id}", 0)
+        mockMvc.perform(post("/api/sales/client/{id}", 0)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -226,7 +226,7 @@ class SaleControllerTest {
 
         when(service.getSalesByClient(1, paginado)).thenReturn(Page.empty());
 
-        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+        mockMvc.perform(post("/api/sales/client/{id}", 1)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -248,7 +248,7 @@ class SaleControllerTest {
 
         when(service.getSalesByClient(1, paginado)).thenReturn(new PageImpl<>(ventas));
 
-        mockMvc.perform(post("/api/ventas/client/{id}", 1)
+        mockMvc.perform(post("/api/sales/client/{id}", 1)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -261,7 +261,7 @@ class SaleControllerTest {
     void list_whenOrderByIsNotValid_returnsError() throws Exception {
         when(service.getAll(1, 10, " ")).thenThrow(new SaleException(SaleException.SORT_NAME_INVALID));
 
-        mockMvc.perform(get("/api/ventas")
+        mockMvc.perform(get("/api/sales")
                         .param("page", "1")
                         .param("size", "10")
                         .param("orderBy", " ")
@@ -276,7 +276,7 @@ class SaleControllerTest {
     void list_whenSizeNumberIsNotValid_returnsError() throws Exception {
         when(service.getAll(1, -1, "id")).thenThrow(new SaleException(SaleException.SIZE_NUMBER_INVALID));
 
-        mockMvc.perform(get("/api/ventas")
+        mockMvc.perform(get("/api/sales")
                         .param("page", "1")
                         .param("size", "-1")
                         .param("orderBy", "id")
@@ -291,7 +291,7 @@ class SaleControllerTest {
     void list_whenPageNumberIsNotValid_returnsError() throws Exception {
         when(service.getAll(0, 10, "id")).thenThrow(new SaleException(SaleException.PAGE_NUMBER_INVALID));
 
-        mockMvc.perform(get("/api/ventas")
+        mockMvc.perform(get("/api/sales")
                         .param("page", "0")
                         .param("size", "10")
                         .param("orderBy", "id")
@@ -306,7 +306,7 @@ class SaleControllerTest {
     void list_whenDataNoExists_returnsEmpty() throws Exception {
         when(service.getAll(1, 10, "id")).thenReturn(Page.empty());
 
-        mockMvc.perform(get("/api/ventas")
+        mockMvc.perform(get("/api/sales")
                         .param("page", "1")
                         .param("size", "10")
                         .param("orderBy", "id")
@@ -331,7 +331,7 @@ class SaleControllerTest {
 
         when(service.getAll(1, 10, "id")).thenReturn(new PageImpl<>(ventas));
 
-        mockMvc.perform(get("/api/ventas")
+        mockMvc.perform(get("/api/sales")
                         .param("page", "1")
                         .param("size", "10")
                         .param("orderBy", "id")

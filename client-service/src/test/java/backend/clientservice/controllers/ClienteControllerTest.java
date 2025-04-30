@@ -53,7 +53,7 @@ class ClienteControllerTest {
 
         when(service.getByDocumentNumber("12345678", TipoDocumento.DNI.name())).thenReturn(client);
         // Act
-        mockMvc.perform(get("/api/clientes/document/{documentNumber}/{documentType}", "12345678", "DNI")
+        mockMvc.perform(get("/api/clients/document/{documentNumber}/{documentType}", "12345678", "DNI")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -83,7 +83,7 @@ class ClienteControllerTest {
 
         when(service.add(any(ClienteRequestDTO.class))).thenReturn(response);
 
-        mockMvc.perform(post("/api/clientes")
+        mockMvc.perform(post("/api/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -107,7 +107,7 @@ class ClienteControllerTest {
 
         when(service.getById(1L)).thenReturn(client);
         // Act
-        mockMvc.perform(get("/api/clientes/1")
+        mockMvc.perform(get("/api/clients/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -121,7 +121,7 @@ class ClienteControllerTest {
     void testListAll_whenDataNotFound_returnEmpty() throws Exception {
         when(service.listAll(1, 10, "id")).thenReturn(Page.empty());
         // Act
-        mockMvc.perform(get("/api/clientes")
+        mockMvc.perform(get("/api/clients")
                         .param("page", "1")
                         .param("size", "10")
                         .param("orderBy", "id")
@@ -156,7 +156,7 @@ class ClienteControllerTest {
         when(service.listAll(1, 10, "id")).thenReturn(new PageImpl<>(listClientes, pageable, listClientes.size()));
 
         // Act
-        mockMvc.perform(get("/api/clientes")
+        mockMvc.perform(get("/api/clients")
                         .param("page", "1")
                         .param("size", "10")
                         .param("orderBy", "id")

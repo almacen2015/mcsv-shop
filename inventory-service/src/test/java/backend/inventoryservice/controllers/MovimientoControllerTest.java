@@ -55,7 +55,7 @@ class MovimientoControllerTest {
         when(service.listByIdProducto(any(Integer.class), any(Paginado.class))).thenReturn(Page.empty());
 
         // Act
-        mockMvc.perform(post("/api/movimientos/2")
+        mockMvc.perform(post("/api/inventory/2")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ class MovimientoControllerTest {
 
         when(service.listByIdProducto(any(Integer.class), any(Paginado.class))).thenReturn(new PageImpl<>(listResponse, pageable, listResponse.size()));
         // Act
-        mockMvc.perform(post("/api/movimientos/1")
+        mockMvc.perform(post("/api/inventory/1")
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ class MovimientoControllerTest {
 
         when(service.add(any(MovimientoDtoRequest.class))).thenReturn(response);
         // Act
-        mockMvc.perform(post("/api/movimientos")
+        mockMvc.perform(post("/api/inventory")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk());
