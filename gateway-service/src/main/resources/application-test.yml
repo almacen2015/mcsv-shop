@@ -5,12 +5,12 @@ spring:
     gateway:
       routes:
         - id: product-service
-          uri: http://product:8081/api/productos
+          uri: http://product:8081/api/products
           predicates:
             - Path=/api/products/**
 
         - id: inventory-service
-          uri: http://movement:8080/api/movimientos
+          uri: http://inventory:8080/api/inventory
           predicates:
             - Path=/api/inventory/**
 
@@ -20,12 +20,12 @@ spring:
             - Path=/api/auth/**
 
         - id: sale-service
-          uri: http://sales:8085/api/ventas
+          uri: http://sales:8085/api/sales
           predicates:
             - Path=/api/sales/**
 
         - id: client-service
-          uri: http://client:8083/api/clientes
+          uri: http://client:8083/api/clients
           predicates:
             - Path=/api/clients/**
 
