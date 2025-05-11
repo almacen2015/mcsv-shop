@@ -1,7 +1,7 @@
 package backend.saleservice.services.impl;
 
 import backend.saleservice.client.ClientFeign;
-import backend.saleservice.client.MovementClient;
+import backend.saleservice.client.InventoryClient;
 import backend.saleservice.client.ProductClient;
 import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
@@ -48,7 +48,7 @@ class VentaServiceImplTest {
     private ProductClient productClient;
 
     @Mock
-    private MovementClient movementClient;
+    private InventoryClient movementClient;
 
     @InjectMocks
     private SaleServiceImpl service;

@@ -1,7 +1,7 @@
 package backend.saleservice.services.impl;
 
 import backend.saleservice.client.ClientFeign;
-import backend.saleservice.client.MovementClient;
+import backend.saleservice.client.InventoryClient;
 import backend.saleservice.client.ProductClient;
 import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
@@ -30,12 +30,12 @@ public class SaleServiceImpl implements SaleService {
     private final SaleMapper saleMapper = SaleMapper.INSTANCE;
     private final DetailSaleMapper detailSaleMapper = DetailSaleMapper.INSTANCE;
     private final ProductClient productClient;
-    private final MovementClient movementClient;
+    private final InventoryClient movementClient;
     private final ClientFeign clientFeign;
 
     private double total = 0.0;
 
-    public SaleServiceImpl(SaleRepository repository, ProductClient productClient, MovementClient movementClient, ClientFeign clientFeign) {
+    public SaleServiceImpl(SaleRepository repository, ProductClient productClient, InventoryClient movementClient, ClientFeign clientFeign) {
         this.repository = repository;
         this.productClient = productClient;
         this.movementClient = movementClient;

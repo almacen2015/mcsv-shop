@@ -3,3 +3,9 @@ spring:
     active: dev
   application:
     name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
