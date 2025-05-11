@@ -16,6 +16,7 @@
         <module>client-service</module>
         <module>inventory-service</module>
         <module>sale-service</module>
+        <module>eureka-service</module>
     </modules>
 
     <groupId>backend</groupId>
