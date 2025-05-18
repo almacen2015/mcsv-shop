@@ -11,6 +11,12 @@ services:
       - inventory
       - sales
 
+  eureka-server:
+    container_name: eureka-service
+    build: ./eureka-service
+    ports:
+      - "8761:8761"
+
   authentication:
     container_name: auth-service
     build: ./auth-service
@@ -18,10 +24,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/authentication-db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=test
+      - EUREKA_INSTANCE_HOSTNAME=auth-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
     ports:
       - "8082:8082"
     depends_on:
       - postgres
+      - eureka-server
 
   product:
     container_name: product-service
@@ -30,10 +40,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/productos-db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=test
+      - EUREKA_INSTANCE_HOSTNAME=product-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
     ports:
       - "8081:8081"
     depends_on:
       - postgres
+      - eureka-server
 
   client:
     container_name: client-service
@@ -42,10 +56,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/clientes-db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=test
+      - EUREKA_INSTANCE_HOSTNAME=clients-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
     ports:
       - "8083:8083"
     depends_on:
       - postgres
+      - eureka-server
 
   inventory:
     container_name: inventory-service
@@ -54,20 +72,27 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/inventario-db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/products
+      - PRODUCT_SERVICE_NAME=products-service
+      - SPRING_PROFILES_ACTIVE=test
+      - EUREKA_INSTANCE_HOSTNAME=inventory-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+      - eureka-server
 
   sales:
     container_name: sales-service
     build: ./sale-service
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/ventas-db
-      - SPRING_PRODUCT_SERVICE_URL=http://gateway:9000/api/products
-      - SPRING_INVENTORY_SERVICE_URL=http://gateway:9000/api/inventory
-      - SPRING_CLIENT_SERVICE_URL=http://gateway:9000/api/clients
+      - PRODUCT_SERVICE_NAME=products-service
+      - INVENTORY_SERVICE_NAME=inventory-service
+      - CLIENT_SERVICE_NAME=clients-service
+      - SPRING_PROFILES_ACTIVE=test
+      - EUREKA_INSTANCE_HOSTNAME=sales-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
     ports:
       - "8085:8085"
     depends_on:
