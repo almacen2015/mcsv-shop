@@ -9,10 +9,10 @@ services:
       - "9000:9000"
     depends_on:
       - authentication
-      - product
-      - client
-      - inventory
-      - sales
+      - products-service
+      - clients-service
+      - inventory-service
+      - sales-service
       - eureka-server
 
   eureka-server:
@@ -37,7 +37,7 @@ services:
       - postgres
       - eureka-server
 
-  product:
+  products-service:
     container_name: product-service
     build: ./product-service
     environment:
@@ -53,7 +53,7 @@ services:
       - postgres
       - eureka-server
 
-  client:
+  clients-service:
     container_name: client-service
     build: ./client-service
     environment:
@@ -69,7 +69,7 @@ services:
       - postgres
       - eureka-server
 
-  inventory:
+  inventory-service:
     container_name: inventory-service
     build: ./inventory-service
     environment:
@@ -86,7 +86,7 @@ services:
       - postgres
       - eureka-server
 
-  sales:
+  sales-service:
     container_name: sales-service
     build: ./sale-service
     environment:
@@ -101,6 +101,7 @@ services:
       - "8085:8085"
     depends_on:
       - mongo
+      - eureka-server
 
   mongo:
     container_name: mongo
