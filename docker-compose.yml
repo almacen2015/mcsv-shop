@@ -2,6 +2,9 @@ services:
   gateway:
     container_name: gateway-service
     build: ./gateway-service
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_PROFILES_ACTIVE=test
     ports:
       - "9000:9000"
     depends_on:
@@ -10,6 +13,7 @@ services:
       - client
       - inventory
       - sales
+      - eureka-server
 
   eureka-server:
     container_name: eureka-service
@@ -26,7 +30,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_PROFILES_ACTIVE=test
       - EUREKA_INSTANCE_HOSTNAME=auth-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     ports:
       - "8082:8082"
     depends_on:
@@ -41,8 +45,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_PROFILES_ACTIVE=test
-      - EUREKA_INSTANCE_HOSTNAME=product-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=products-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     ports:
       - "8081:8081"
     depends_on:
@@ -58,7 +62,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_PROFILES_ACTIVE=test
       - EUREKA_INSTANCE_HOSTNAME=clients-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     ports:
       - "8083:8083"
     depends_on:
@@ -75,7 +79,7 @@ services:
       - PRODUCT_SERVICE_NAME=products-service
       - SPRING_PROFILES_ACTIVE=test
       - EUREKA_INSTANCE_HOSTNAME=inventory-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     ports:
       - "8080:8080"
     depends_on:
@@ -92,7 +96,7 @@ services:
       - CLIENT_SERVICE_NAME=clients-service
       - SPRING_PROFILES_ACTIVE=test
       - EUREKA_INSTANCE_HOSTNAME=sales-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     ports:
       - "8085:8085"
     depends_on:

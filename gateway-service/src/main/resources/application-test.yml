@@ -5,27 +5,33 @@ spring:
     gateway:
       routes:
         - id: product-service
-          uri: http://product:8081/api/products
+          uri: lb://products-service
           predicates:
             - Path=/api/products/**
 
         - id: inventory-service
-          uri: http://inventory:8080/api/inventory
+          uri: lb://inventory-service
           predicates:
             - Path=/api/inventory/**
 
         - id: auth-service
-          uri: http://authentication:8082/api/auth
+          uri: lb://auth-service
           predicates:
             - Path=/api/auth/**
 
         - id: sale-service
-          uri: http://sales:8085/api/sales
+          uri: lb://sales-service
           predicates:
             - Path=/api/sales/**
 
         - id: client-service
-          uri: http://client:8083/api/clients
+          uri: lb://clients-service
           predicates:
             - Path=/api/clients/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
 
