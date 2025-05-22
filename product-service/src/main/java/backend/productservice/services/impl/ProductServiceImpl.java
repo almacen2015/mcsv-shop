@@ -2,16 +2,20 @@ package backend.productservice.services.impl;
 
 import backend.productservice.enums.Estado;
 import backend.productservice.enums.TipoMovimiento;
-import backend.productservice.exceptions.ProductoException;
+import backend.productservice.exceptions.ProductException;
 import backend.productservice.mappers.ProductoMapper;
 import backend.productservice.models.dto.request.ProductoDtoRequest;
 import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.models.entities.Producto;
 import backend.productservice.repositories.ProductoRepository;
-import backend.productservice.services.ProductoService;
+import backend.productservice.services.ProductService;
 import backend.productservice.util.Paginado;
+import backend.utils.PageableUtils;
+import backend.utils.Utils;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,11 +24,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class ProductoServiceImpl implements ProductoService {
+public class ProductServiceImpl implements ProductService {
     private final ProductoRepository productoRepository;
     private final ProductoMapper productoMapper = ProductoMapper.INSTANCE;
 
-    public ProductoServiceImpl(ProductoRepository productoRepository) {
+    public ProductServiceImpl(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
 
@@ -32,10 +36,10 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional(rollbackOn = Exception.class)
     public ProductoDtoResponse update(ProductoDtoRequest dto, Integer id) {
         validateData(dto);
-        validateId(id);
+        Utils.validateIdProduct(id);
 
         Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new ProductoException(ProductoException.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
 
         producto.setNombre(dto.nombre());
         producto.setDescripcion(dto.descripcion());
@@ -50,7 +54,7 @@ public class ProductoServiceImpl implements ProductoService {
     public void updateStock(Integer idProducto, Integer cantidad, String tipoMovimiento) {
         validateAmount(cantidad);
         Producto productoEncontrado = productoRepository.findById(idProducto)
-                .orElseThrow(() -> new ProductoException(ProductoException.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new ProductException(ProductException.PRODUCT_NOT_FOUND));
 
         final int stock = productoEncontrado.getStock();
         int stockFinal;
@@ -79,20 +83,14 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     private void validateStock(Integer stock) {
-        if (stock == null || stock < 0) {
-            throw new ProductoException(ProductoException.INVALID_STOCK);
+        if (Utils.isNotPositive(stock)) {
+            throw new ProductException(ProductException.INVALID_STOCK);
         }
     }
 
     private void validateAmount(Integer cantidad) {
-        if (cantidad == null || cantidad <= 0) {
-            throw new ProductoException(ProductoException.AMOUNT_INVALID);
-        }
-    }
-
-    private void validateId(Integer id) {
-        if (id == null || id <= 0) {
-            throw new ProductoException(ProductoException.INVALID_ID);
+        if (Utils.isNotPositive(cantidad)) {
+            throw new ProductException(ProductException.AMOUNT_INVALID);
         }
     }
 
@@ -109,27 +107,27 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     private void validatePrecio(Double precio) {
-        if (precio == null || precio <= 0) {
-            throw new ProductoException(ProductoException.PRODUCT_PRICE_INVALID);
+        if (Utils.isNotPositive(precio.intValue())) {
+            throw new ProductException(ProductException.PRODUCT_PRICE_INVALID);
         }
     }
 
     private void validateDescripcion(String descripcion) {
-        if (descripcion == null || descripcion.isBlank()) {
-            throw new ProductoException(ProductoException.PRODUCT_DESCRIPTION_EMPTY);
+        if (Utils.isBlank(descripcion)) {
+            throw new ProductException(ProductException.PRODUCT_DESCRIPTION_EMPTY);
         }
     }
 
     private void validateNombre(String nombre) {
-        if (nombre == null || nombre.isBlank()) {
-            throw new ProductoException(ProductoException.PRODUCT_NAME_EMPTY);
+        if (Utils.isBlank(nombre)) {
+            throw new ProductException(ProductException.PRODUCT_NAME_EMPTY);
         }
     }
 
     @Override
     public Page<ProductoDtoResponse> listAll(Integer page, Integer size, String orderBy) {
-        validatePaginado(page, size, orderBy);
-        Pageable pageable = constructPageable(page, size, orderBy);
+        Utils.validatePagination(page, size, orderBy);
+        Pageable pageable = PageableUtils.constructPageable(page, size, orderBy);
 
         Page<Producto> productos = productoRepository.findAll(pageable);
 
@@ -142,9 +140,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoDtoResponse getById(Integer id) {
-        if (id == null || id <= 0) {
-            throw new ProductoException(ProductoException.INVALID_ID);
-        }
+        Utils.validateIdProduct(id);
 
         Optional<Producto> producto = productoRepository.findById(id);
         if (producto.isEmpty()) {
@@ -158,10 +154,10 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Page<ProductoDtoResponse> listByname(String nombre, Paginado paginado) {
-        validatePaginado(paginado.page(), paginado.size(), paginado.orderBy());
+        Utils.validatePagination(paginado.page(), paginado.size(), paginado.orderBy());
         validateNombre(nombre);
 
-        Pageable pageable = constructPageable(paginado.page(), paginado.size(), paginado.orderBy());
+        Pageable pageable = PageableUtils.constructPageable(paginado.page(), paginado.size(), paginado.orderBy());
 
         Page<Producto> productos = productoRepository.findAllByNombreIgnoreCaseContaining(nombre, pageable);
 
@@ -173,23 +169,5 @@ public class ProductoServiceImpl implements ProductoService {
                 .map(productoMapper::toDto).toList();
 
         return new PageImpl<>(response, pageable, productos.getTotalElements());
-    }
-
-    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
-        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
-    }
-
-    private void validatePaginado(Integer page, Integer size, String orderBy) {
-        if (page <= 0) {
-            throw new ProductoException(ProductoException.PAGE_NUMBER_INVALID);
-        }
-
-        if (size <= 0) {
-            throw new ProductoException(ProductoException.SIZE_NUMBER_INVALID);
-        }
-
-        if (orderBy == null || orderBy.isBlank()) {
-            throw new ProductoException(ProductoException.SORT_NAME_INVALID);
-        }
     }
 }

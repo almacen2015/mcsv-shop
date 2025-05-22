@@ -1,6 +1,6 @@
 package backend.productservice.services.impl;
 
-import backend.productservice.exceptions.ProductoException;
+import backend.productservice.exceptions.ProductException;
 import backend.productservice.models.dto.request.ProductoDtoRequest;
 import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.models.entities.Producto;
@@ -29,13 +29,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductoServiceImplTest {
+class ProductServiceImplTest {
 
     @Mock
     private ProductoRepository repository;
 
     @InjectMocks
-    private ProductoServiceImpl service;
+    private ProductServiceImpl service;
 
     @Test
     void testActualizarProducto_DadoProductoValido_RetornaProductoActualizado() {
@@ -109,7 +109,7 @@ class ProductoServiceImplTest {
     void testActualizarStock_DadoProductoNoEncontrado_RetornaError() {
         when(repository.findById(1)).thenReturn(Optional.empty());
 
-        assertThrows(ProductoException.class, () -> service.updateStock(1, 10, "ENTRADA"));
+        assertThrows(ProductException.class, () -> service.updateStock(1, 10, "ENTRADA"));
     }
 
     @Test
@@ -121,12 +121,12 @@ class ProductoServiceImplTest {
 
         when(repository.findById(1)).thenReturn(Optional.of(producto));
 
-        assertThrows(ProductoException.class, () -> service.updateStock(1, 20, "SALIDA"));
+        assertThrows(ProductException.class, () -> service.updateStock(1, 20, "SALIDA"));
     }
 
     @Test
     void testActualizarStock_DadoCantidadNegativa_RetornaError() {
-        assertThrows(ProductoException.class, () -> service.updateStock(1, -10, "SALIDA"));
+        assertThrows(ProductException.class, () -> service.updateStock(1, -10, "SALIDA"));
     }
 
     @Test
@@ -261,7 +261,7 @@ class ProductoServiceImplTest {
         ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "Descripcion 1", -100.0);
 
         // Act & Assert
-        assertThrows(ProductoException.class, () -> service.add(dto));
+        assertThrows(ProductException.class, () -> service.add(dto));
     }
 
     @Test
@@ -270,7 +270,7 @@ class ProductoServiceImplTest {
         ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "Descripcion 1", 0.0);
 
         // Act & Assert
-        assertThrows(ProductoException.class, () -> service.add(dto));
+        assertThrows(ProductException.class, () -> service.add(dto));
     }
 
     @Test
@@ -279,7 +279,7 @@ class ProductoServiceImplTest {
         ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "", 100.0);
 
         // Act & Assert
-        assertThrows(ProductoException.class, () -> service.add(dto));
+        assertThrows(ProductException.class, () -> service.add(dto));
     }
 
     @Test
@@ -288,7 +288,7 @@ class ProductoServiceImplTest {
         ProductoDtoRequest dto = new ProductoDtoRequest("", "Descripcion 1", 100.0);
 
         // Act & Assert
-        assertThrows(ProductoException.class, () -> service.add(dto));
+        assertThrows(ProductException.class, () -> service.add(dto));
     }
 
     @Test

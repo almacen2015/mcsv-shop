@@ -1,4 +1,4 @@
-package backend;
+package backend.utils;
 
 public class ApiConstants {
     public static final String PRODUCT_BASE = "/api/products/";

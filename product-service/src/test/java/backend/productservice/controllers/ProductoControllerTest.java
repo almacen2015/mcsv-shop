@@ -3,7 +3,7 @@ package backend.productservice.controllers;
 import backend.productservice.models.dto.request.ProductoDtoRequest;
 import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.security.TestSecurityConfig;
-import backend.productservice.services.ProductoService;
+import backend.productservice.services.ProductService;
 import backend.productservice.util.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class ProductoControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private ProductoService service;
+    private ProductService service;
 
     @Autowired
     private ObjectMapper objectMapper;

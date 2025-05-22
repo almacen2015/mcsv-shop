@@ -2,7 +2,7 @@ package backend.productservice.controllers;
 
 import backend.productservice.models.dto.request.ProductoDtoRequest;
 import backend.productservice.models.dto.response.ProductoDtoResponse;
-import backend.productservice.services.ProductoService;
+import backend.productservice.services.ProductService;
 import backend.productservice.util.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "BearerAuth")
 public class ProductoController {
 
-    private final ProductoService productoService;
+    private final ProductService productService;
 
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
+    public ProductoController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -33,7 +33,7 @@ public class ProductoController {
     })
     @PostMapping
     public ResponseEntity<ProductoDtoResponse> add(@RequestBody ProductoDtoRequest dto) {
-        ProductoDtoResponse producto = productoService.add(dto);
+        ProductoDtoResponse producto = productService.add(dto);
         return new ResponseEntity<>(producto, HttpStatus.CREATED);
     }
 
@@ -46,7 +46,7 @@ public class ProductoController {
     public ResponseEntity<Page<ProductoDtoResponse>> list(@RequestParam Integer page,
                                                           @RequestParam Integer size,
                                                           @RequestParam String orderBy) {
-        return new ResponseEntity<>(productoService.listAll(page, size, orderBy), HttpStatus.OK);
+        return new ResponseEntity<>(productService.listAll(page, size, orderBy), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
@@ -57,7 +57,7 @@ public class ProductoController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDtoResponse> getById(@PathVariable Integer id) {
-        ProductoDtoResponse producto = productoService.getById(id);
+        ProductoDtoResponse producto = productService.getById(id);
         return new ResponseEntity<>(producto, HttpStatus.OK);
     }
 
@@ -69,7 +69,7 @@ public class ProductoController {
     })
     @PostMapping("/nombre/{nombre}")
     public ResponseEntity<Page<ProductoDtoResponse>> getByName(@PathVariable String nombre, @RequestBody Paginado paginado) {
-        return new ResponseEntity<>(productoService.listByname(nombre, paginado), HttpStatus.OK);
+        return new ResponseEntity<>(productService.listByname(nombre, paginado), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -80,7 +80,7 @@ public class ProductoController {
     })
     @PatchMapping("/{id}")
     public ResponseEntity<ProductoDtoResponse> update(@RequestBody ProductoDtoRequest dto, @PathVariable Integer id) {
-        ProductoDtoResponse producto = productoService.update(dto, id);
+        ProductoDtoResponse producto = productService.update(dto, id);
         return new ResponseEntity<>(producto, HttpStatus.OK);
     }
 
@@ -92,7 +92,7 @@ public class ProductoController {
     })
     @PutMapping("/stock/{idProducto}/{cantidad}/{tipoMovimiento}")
     public ResponseEntity<Void> updateStock(@PathVariable Integer idProducto, @PathVariable Integer cantidad, @PathVariable String tipoMovimiento) {
-        productoService.updateStock(idProducto, cantidad, tipoMovimiento);
+        productService.updateStock(idProducto, cantidad, tipoMovimiento);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

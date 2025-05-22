@@ -1,6 +1,6 @@
 package backend.inventoryservice.client;
 
-import backend.ApiConstants;
+import backend.utils.ApiConstants;
 import backend.inventoryservice.models.dtos.ProductoDtoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

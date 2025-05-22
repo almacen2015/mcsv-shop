@@ -5,7 +5,7 @@ import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.util.Paginado;
 import org.springframework.data.domain.Page;
 
-public interface ProductoService {
+public interface ProductService {
 
     ProductoDtoResponse add(ProductoDtoRequest dto);
 

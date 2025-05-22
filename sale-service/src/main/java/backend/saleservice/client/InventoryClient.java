@@ -1,6 +1,6 @@
 package backend.saleservice.client;
 
-import backend.ApiConstants;
+import backend.utils.ApiConstants;
 import backend.saleservice.models.dtos.request.MovementRequestDto;
 import backend.saleservice.models.dtos.response.MovementResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
