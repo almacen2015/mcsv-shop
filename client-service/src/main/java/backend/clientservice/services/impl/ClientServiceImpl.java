@@ -6,35 +6,38 @@ import backend.clientservice.models.dtos.ClienteResponseDTO;
 import backend.clientservice.models.entities.Cliente;
 import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.models.mappers.ClienteMapper;
-import backend.clientservice.repositories.ClienteRepository;
-import backend.clientservice.services.ClienteService;
-import org.springframework.data.domain.*;
+import backend.clientservice.repositories.ClientRepository;
+import backend.clientservice.services.ClientService;
+import backend.utils.PageableUtils;
+import backend.utils.Utils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class ClienteServiceImpl implements ClienteService {
+public class ClientServiceImpl implements ClientService {
 
-    private final ClienteRepository clienteRepository;
+    private final ClientRepository clientRepository;
     private final ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
-    public ClienteServiceImpl(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
+    public ClientServiceImpl(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @Override
     public ClienteResponseDTO getByDocumentNumber(String documentNumber, String documentType) {
-        validateLetraNumeroDocumento(documentNumber);
+        validateDni(documentNumber);
         validateNumeroDocumento(documentNumber, documentType);
         validateTipoDocumento(documentType);
 
-        Optional<Cliente> clientFound = clienteRepository.findByNumeroDocumento(documentNumber);
+        Optional<Cliente> clientFound = clientRepository.findByNumeroDocumento(documentNumber);
         if (clientFound.isPresent()) {
             return clienteMapper.toResponseDTO(clientFound.get());
         }
@@ -50,13 +53,13 @@ public class ClienteServiceImpl implements ClienteService {
         validateNumeroDocumento(dto.numeroDocumento(), dto.tipoDocumento());
         validateFechaNacimiento(dto.fechaNacimiento());
 
-        if (clienteRepository.existsByNumeroDocumento(dto.numeroDocumento())) {
+        if (clientRepository.existsByNumeroDocumento(dto.numeroDocumento())) {
             throw new ClienteException(ClienteException.DOCUMENT_NUMBER_EXISTS);
         }
 
         Cliente cliente = clienteMapper.toEntity(dto);
 
-        Cliente clientSaved = clienteRepository.save(cliente);
+        Cliente clientSaved = clientRepository.save(cliente);
 
         ClienteResponseDTO response = clienteMapper.toResponseDTO(clientSaved);
 
@@ -65,10 +68,10 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Page<ClienteResponseDTO> listAll(Integer page, Integer size, String orderBy) {
-        validatePaginado(page, size, orderBy);
-        Pageable pageable = constructPageable(page, size, orderBy);
+        Utils.validatePagination(page, size, orderBy);
+        Pageable pageable = PageableUtils.constructPageable(page, size, orderBy);
 
-        Page<Cliente> clientes = clienteRepository.findAll(pageable);
+        Page<Cliente> clientes = clientRepository.findAll(pageable);
 
         List<ClienteResponseDTO> response = clientes.getContent().stream()
                 .map(clienteMapper::toResponseDTO).toList();
@@ -79,59 +82,33 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ClienteResponseDTO getById(Long id) {
         validateId(id);
-        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteException(ClienteException.CLIENT_NOT_FOUND));
+        Cliente cliente = clientRepository.findById(id).orElseThrow(() -> new ClienteException(ClienteException.CLIENT_NOT_FOUND));
 
         return clienteMapper.toResponseDTO(cliente);
     }
 
-    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
-        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
-    }
-
-    private void validatePaginado(Integer page, Integer size, String orderBy) {
-        if (page <= 0) {
-            throw new ClienteException(ClienteException.PAGE_NUMBER_INVALID);
-        }
-
-        if (size <= 0) {
-            throw new ClienteException(ClienteException.SIZE_NUMBER_INVALID);
-        }
-
-        if (orderBy == null || orderBy.isBlank()) {
-            throw new ClienteException(ClienteException.SORT_NAME_INVALID);
-        }
-    }
-
-    private void validateLetraNumeroDocumento(String numeroDocumento) {
-        if (numeroDocumento.matches(".*[a-zA-Z]+.*")) {
-            throw new ClienteException(ClienteException.INVALID_DOCUMENT_NUMBER);
-        }
-    }
-
     private void validateId(Long id) {
-        if (id == null || id <= 0) {
+        if (Utils.isNotPositive(id.intValue())) {
             throw new ClienteException(ClienteException.ID_INVALID);
         }
     }
 
     private void validateNombre(String nombre) {
-        if (nombre == null || nombre.isBlank()) {
+        if (Utils.isBlank(nombre)) {
             throw new ClienteException(ClienteException.INVALID_NAME);
         }
     }
 
     private void validateApellido(String apellido) {
-        if (apellido == null || apellido.isBlank()) {
+        if (Utils.isBlank(apellido)) {
             throw new ClienteException(ClienteException.INVALID_LAST_NAME);
         }
     }
 
     private void validateNumeroDocumento(String numeroDocumento, String tipoDocumento) {
-        if (numeroDocumento == null || numeroDocumento.isBlank()) {
+        if (Utils.isNotValidDni(numeroDocumento)) {
             throw new ClienteException(ClienteException.INVALID_DOCUMENT_NUMBER);
         }
-
-        validateLetraNumeroDocumento(numeroDocumento);
 
         if (Objects.equals(tipoDocumento, TipoDocumento.DNI.name())) {
             validateDni(numeroDocumento);
@@ -139,13 +116,13 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private void validateDni(String numeroDocumento) {
-        if (numeroDocumento.length() != 8) {
+        if (Utils.isNotValidDni(numeroDocumento)) {
             throw new ClienteException(ClienteException.INVALID_DOCUMENT_NUMBER);
         }
     }
 
     private void validateTipoDocumento(String tipoDocumento) {
-        if (tipoDocumento == null || tipoDocumento.isEmpty()) {
+        if (Utils.isBlank(tipoDocumento)) {
             throw new ClienteException(ClienteException.INVALID_DOCUMENT_TYPE);
         }
 
@@ -155,7 +132,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private void validateFechaNacimiento(String fechaNacimiento) {
-        if (fechaNacimiento == null || fechaNacimiento.isEmpty()) {
+        if (Utils.isBlank(fechaNacimiento)) {
             throw new ClienteException(ClienteException.INVALID_BIRTH_DATE);
         }
 
@@ -172,14 +149,4 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ClienteException(ClienteException.INVALID_BIRTH_DATE);
         }
     }
-
-    private String convertString(LocalDate fechaNacimiento) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return fechaNacimiento.format(formatter);
-        } catch (Exception e) {
-            throw new ClienteException(ClienteException.INVALID_BIRTH_DATE);
-        }
-    }
-
 }

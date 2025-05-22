@@ -18,6 +18,14 @@ public class Utils {
         return value == null || value.isBlank();
     }
 
+    public static boolean isNotValidDni(String value) {
+        if (value.length() != 8) {
+            return true;
+        }
+
+        return value.matches(".*[a-zA-Z]+.*");
+    }
+
     public static void validatePagination(Integer page, Integer size, String orderBy) {
         if (isNotPositive(page)) {
             throw new UtilException(UtilException.PAGE_NUMBER_INVALID);

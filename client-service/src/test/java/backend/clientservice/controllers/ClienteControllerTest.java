@@ -4,7 +4,7 @@ import backend.clientservice.models.dtos.ClienteRequestDTO;
 import backend.clientservice.models.dtos.ClienteResponseDTO;
 import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.security.TestSecurityConfig;
-import backend.clientservice.services.ClienteService;
+import backend.clientservice.services.ClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class ClienteControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private ClienteService service;
+    private ClientService service;
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -2,7 +2,7 @@ package backend.clientservice.controllers;
 
 import backend.clientservice.models.dtos.ClienteRequestDTO;
 import backend.clientservice.models.dtos.ClienteResponseDTO;
-import backend.clientservice.services.ClienteService;
+import backend.clientservice.services.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/clients")
 public class ClienteController {
-    private final ClienteService clienteService;
+    private final ClientService clientService;
 
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
+    public ClienteController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -33,7 +33,7 @@ public class ClienteController {
     public ResponseEntity<Page<ClienteResponseDTO>> listAll(@RequestParam Integer page,
                                                             @RequestParam Integer size,
                                                             @RequestParam String orderBy) {
-        return new ResponseEntity<>(clienteService.listAll(page, size, orderBy), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.listAll(page, size, orderBy), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -46,7 +46,7 @@ public class ClienteController {
     })
     @PostMapping
     public ResponseEntity<ClienteResponseDTO> add(@RequestBody ClienteRequestDTO cliente) {
-        return new ResponseEntity<>(clienteService.add(cliente), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.add(cliente), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -59,7 +59,7 @@ public class ClienteController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(clienteService.getById(id), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.getById(id), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -72,7 +72,7 @@ public class ClienteController {
     })
     @GetMapping("/document/{documentNumber}/{documentType}")
     public ResponseEntity<ClienteResponseDTO> getByDocumentNumber(@PathVariable String documentNumber, @PathVariable String documentType) {
-        return new ResponseEntity<>(clienteService.getByDocumentNumber(documentNumber, documentType), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.getByDocumentNumber(documentNumber, documentType), HttpStatus.OK);
     }
 
 }

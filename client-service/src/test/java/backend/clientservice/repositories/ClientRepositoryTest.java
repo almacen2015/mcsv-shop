@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-class ClienteRepositoryTest {
+class ClientRepositoryTest {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ClientRepository clientRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -36,7 +36,7 @@ class ClienteRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        clienteRepository.deleteAll();
+        clientRepository.deleteAll();
     }
 
     @Test
@@ -49,7 +49,7 @@ class ClienteRepositoryTest {
                 .fechaNacimiento(LocalDate.of(1994, 5, 4))
                 .build();
 
-        clienteRepository.save(cliente1);
+        clientRepository.save(cliente1);
 
         Cliente cliente2 = Cliente.builder()
                 .nombre("Maria")
@@ -59,11 +59,11 @@ class ClienteRepositoryTest {
                 .fechaNacimiento(LocalDate.of(1994, 5, 4))
                 .build();
 
-        clienteRepository.save(cliente2);
+        clientRepository.save(cliente2);
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Cliente> clientes = clienteRepository.findAll(pageable);
+        Page<Cliente> clientes = clientRepository.findAll(pageable);
 
         assertThat(clientes).isNotNull();
         assertThat(clientes.getTotalElements()).isEqualTo(2);
@@ -80,7 +80,7 @@ class ClienteRepositoryTest {
                 .fechaNacimiento(LocalDate.of(1994, 5, 4))
                 .build();
 
-        Cliente clientSaved = clienteRepository.save(cliente1);
+        Cliente clientSaved = clientRepository.save(cliente1);
 
         assertNotNull(clientSaved.getId());
         assertEquals(1L, clientSaved.getId());
@@ -96,9 +96,9 @@ class ClienteRepositoryTest {
                 .tipoDocumento(TipoDocumento.DNI)
                 .fechaNacimiento(LocalDate.of(1994, 5, 4))
                 .build();
-        clienteRepository.save(cliente1);
+        clientRepository.save(cliente1);
 
-        Optional<Cliente> clientFound = clienteRepository.findById(1L);
+        Optional<Cliente> clientFound = clientRepository.findById(1L);
 
         assertTrue(clientFound.isPresent());
         assertNotNull(clientFound.get().getId());

@@ -5,7 +5,7 @@ import backend.clientservice.models.dtos.ClienteRequestDTO;
 import backend.clientservice.models.dtos.ClienteResponseDTO;
 import backend.clientservice.models.entities.Cliente;
 import backend.clientservice.models.entities.TipoDocumento;
-import backend.clientservice.repositories.ClienteRepository;
+import backend.clientservice.repositories.ClientRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,13 +28,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ClienteServiceImplTest {
+class ClientServiceImplTest {
 
     @Mock
-    private ClienteRepository repository;
+    private ClientRepository repository;
 
     @InjectMocks
-    private ClienteServiceImpl service;
+    private ClientServiceImpl service;
 
     @Test
     void testGetByDocumentNumber_whenDocumentTypeIsInvalid_returnError() {
