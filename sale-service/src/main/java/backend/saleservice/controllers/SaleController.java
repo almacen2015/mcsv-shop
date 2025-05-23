@@ -1,5 +1,6 @@
 package backend.saleservice.controllers;
 
+import backend.pageable.Paginado;
 import backend.saleservice.models.dtos.request.SaleRequestDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
 import backend.saleservice.services.SaleService;

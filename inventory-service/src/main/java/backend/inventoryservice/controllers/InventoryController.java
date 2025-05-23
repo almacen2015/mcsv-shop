@@ -3,6 +3,7 @@ package backend.inventoryservice.controllers;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
 import backend.inventoryservice.services.MovimientoService;
+import backend.pageable.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

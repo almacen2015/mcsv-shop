@@ -1,9 +1,9 @@
 package backend.productservice.controllers;
 
+import backend.pageable.Paginado;
 import backend.productservice.models.dto.request.ProductoDtoRequest;
 import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.services.ProductService;
-import backend.productservice.util.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
