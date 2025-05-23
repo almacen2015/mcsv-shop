@@ -1,6 +1,6 @@
 package backend.inventoryservice.services.impl;
 
-import backend.inventoryservice.client.ProductoClient;
+import backend.inventoryservice.client.ProductClient;
 import backend.inventoryservice.exceptions.InventoryException;
 import backend.inventoryservice.mappers.MovimientoMapper;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
@@ -10,9 +10,13 @@ import backend.inventoryservice.models.entities.Movimiento;
 import backend.inventoryservice.models.entities.TipoMovimiento;
 import backend.inventoryservice.repositories.MovimientoRepository;
 import backend.inventoryservice.services.MovimientoService;
-import backend.inventoryservice.util.Paginado;
+import backend.pageable.PageableUtils;
+import backend.pageable.Paginado;
+import backend.utils.Utils;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,19 +29,19 @@ public class MovimientoServiceImpl implements MovimientoService {
 
     private final MovimientoRepository movimientoRepository;
     private final MovimientoMapper movimientoMapper = MovimientoMapper.INSTANCE;
-    private final ProductoClient productoClient;
+    private final ProductClient productClient;
 
-    public MovimientoServiceImpl(MovimientoRepository movimientoRepository, ProductoClient productoClient) {
+    public MovimientoServiceImpl(MovimientoRepository movimientoRepository, ProductClient productClient) {
         this.movimientoRepository = movimientoRepository;
-        this.productoClient = productoClient;
+        this.productClient = productClient;
     }
 
     @Override
     public Page<MovimientoDtoResponse> listByIdProducto(Integer productId, Paginado paginado) {
-        validatePaginado(paginado.page(), paginado.size(), paginado.orderBy());
-        validateId(productId);
+        PageableUtils.validatePagination(paginado);
+        Utils.validateIdProduct(productId);
 
-        Pageable pageable = constructPageable(paginado.page(), paginado.size(), paginado.orderBy());
+        Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Movimiento> movimientos = movimientoRepository.findAllByProductoId(productId, pageable);
         if (movimientos.isEmpty()) {
@@ -61,7 +65,7 @@ public class MovimientoServiceImpl implements MovimientoService {
         ProductoDtoResponse producto = getProduct(productoId);
         validateStock(producto.stock(), tipoMovimiento);
 
-        productoClient.updateStock(productoId, cantidad, tipoMovimiento);
+        productClient.updateStock(productoId, cantidad, tipoMovimiento);
 
         Movimiento movimiento = movimientoMapper.toEntity(dto);
         movimiento.setFechaRegistro(LocalDateTime.now());
@@ -75,46 +79,22 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     private ProductoDtoResponse getProduct(Integer productoId) {
-        Optional<ProductoDtoResponse> producto = Optional.ofNullable(productoClient.getProduct(productoId));
+        Optional<ProductoDtoResponse> producto = Optional.ofNullable(productClient.getProduct(productoId));
         if (producto.isEmpty()) {
             throw new InventoryException(InventoryException.INVALID_PRODUCT);
         }
         return producto.get();
     }
 
-    private void validateId(Integer id) {
-        if (id == null || id <= 0) {
-            throw new InventoryException(InventoryException.INVALID_ID);
-        }
-    }
-
     private void validateData(Integer cantidad, String tipoMovimiento, Integer idProducto) {
-        if (cantidad == null || cantidad <= 0) {
+        if (Utils.isNotPositive(cantidad)) {
             throw new InventoryException(InventoryException.INVALID_AMOUNT);
         }
 
-        if (tipoMovimiento == null || tipoMovimiento.isBlank()) {
+        if (Utils.isBlank(tipoMovimiento)) {
             throw new InventoryException(InventoryException.INVALID_TYPE_MOVEMENT);
         }
 
-        validateId(idProducto);
-    }
-
-    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
-        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
-    }
-
-    private void validatePaginado(Integer page, Integer size, String orderBy) {
-        if (page <= 0) {
-            throw new InventoryException(InventoryException.PAGE_NUMBER_INVALID);
-        }
-
-        if (size <= 0) {
-            throw new InventoryException(InventoryException.SIZE_NUMBER_INVALID);
-        }
-
-        if (orderBy == null || orderBy.isBlank()) {
-            throw new InventoryException(InventoryException.SORT_NAME_INVALID);
-        }
+        Utils.validateIdProduct(idProducto);
     }
 }

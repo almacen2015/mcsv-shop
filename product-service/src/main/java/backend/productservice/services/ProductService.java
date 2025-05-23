@@ -1,8 +1,8 @@
 package backend.productservice.services;
 
+import backend.pageable.Paginado;
 import backend.productservice.models.dto.request.ProductoDtoRequest;
 import backend.productservice.models.dto.response.ProductoDtoResponse;
-import backend.productservice.util.Paginado;
 import org.springframework.data.domain.Page;
 
 public interface ProductService {

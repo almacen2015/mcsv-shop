@@ -8,7 +8,8 @@ import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.models.mappers.ClienteMapper;
 import backend.clientservice.repositories.ClientRepository;
 import backend.clientservice.services.ClientService;
-import backend.utils.PageableUtils;
+import backend.pageable.PageableUtils;
+import backend.pageable.Paginado;
 import backend.utils.Utils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -68,8 +69,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Page<ClienteResponseDTO> listAll(Integer page, Integer size, String orderBy) {
-        Utils.validatePagination(page, size, orderBy);
-        Pageable pageable = PageableUtils.constructPageable(page, size, orderBy);
+        Paginado paginado = new Paginado(page, size, orderBy);
+        PageableUtils.validatePagination(paginado);
+        Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Cliente> clientes = clientRepository.findAll(pageable);
 

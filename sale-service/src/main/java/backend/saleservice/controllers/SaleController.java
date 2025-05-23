@@ -3,7 +3,6 @@ package backend.saleservice.controllers;
 import backend.saleservice.models.dtos.request.SaleRequestDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
 import backend.saleservice.services.SaleService;
-import backend.saleservice.util.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

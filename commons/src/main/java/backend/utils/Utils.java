@@ -25,18 +25,4 @@ public class Utils {
 
         return value.matches(".*[a-zA-Z]+.*");
     }
-
-    public static void validatePagination(Integer page, Integer size, String orderBy) {
-        if (isNotPositive(page)) {
-            throw new UtilException(UtilException.PAGE_NUMBER_INVALID);
-        }
-
-        if (isNotPositive(size)) {
-            throw new UtilException(UtilException.SIZE_NUMBER_INVALID);
-        }
-
-        if (isBlank(orderBy)) {
-            throw new UtilException(UtilException.SORT_NAME_INVALID);
-        }
-    }
 }

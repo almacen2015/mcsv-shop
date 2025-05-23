@@ -1,6 +1,6 @@
 package backend.inventoryservice.services.impl;
 
-import backend.inventoryservice.client.ProductoClient;
+import backend.inventoryservice.client.ProductClient;
 import backend.inventoryservice.exceptions.InventoryException;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
@@ -8,7 +8,6 @@ import backend.inventoryservice.models.dtos.ProductoDtoResponse;
 import backend.inventoryservice.models.entities.Movimiento;
 import backend.inventoryservice.models.entities.TipoMovimiento;
 import backend.inventoryservice.repositories.MovimientoRepository;
-import backend.inventoryservice.util.Paginado;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,7 +36,7 @@ class MovimientoServiceImplTest {
     private MovimientoServiceImpl service;
 
     @Mock
-    private ProductoClient productoClient;
+    private ProductClient productClient;
 
     @Test
     void testListarMovimientosPorProducto_DadoIdEsMenorIgualZero_RetornaError() {
@@ -95,7 +94,7 @@ class MovimientoServiceImplTest {
         MovimientoDtoRequest dto = new MovimientoDtoRequest(1, 10, "SALIDA");
 
         // Act
-        when(productoClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 0));
+        when(productClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 0));
 
         assertThrows(InventoryException.class, () -> service.add(dto));
         // Assert
@@ -107,7 +106,7 @@ class MovimientoServiceImplTest {
         MovimientoDtoRequest dto = new MovimientoDtoRequest(1, 10, "ENTRADA");
 
         // Act
-        when(productoClient.getProduct(1)).thenReturn(null);
+        when(productClient.getProduct(1)).thenReturn(null);
 
         assertThrows(InventoryException.class, () -> service.add(dto));
         // Assert
@@ -138,7 +137,7 @@ class MovimientoServiceImplTest {
 
 
         when(movimientoRepository.save(any(Movimiento.class))).thenReturn(movimiento);
-        when(productoClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 10));
+        when(productClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 10));
 
         MovimientoDtoResponse movimientoDtoResponse = service.add(dto);
 

@@ -1,8 +1,8 @@
 package backend.saleservice.services;
 
+import backend.pageable.Paginado;
 import backend.saleservice.models.dtos.request.SaleRequestDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
-import backend.saleservice.util.Paginado;
 import org.springframework.data.domain.Page;
 
 public interface SaleService {

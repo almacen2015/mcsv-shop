@@ -1,5 +1,6 @@
 package backend.productservice.services.impl;
 
+import backend.pageable.Paginado;
 import backend.productservice.enums.Estado;
 import backend.productservice.enums.TipoMovimiento;
 import backend.productservice.exceptions.ProductException;
@@ -9,8 +10,6 @@ import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.models.entities.Producto;
 import backend.productservice.repositories.ProductoRepository;
 import backend.productservice.services.ProductService;
-import backend.productservice.util.Paginado;
-import backend.utils.PageableUtils;
 import backend.utils.Utils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -22,6 +21,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static backend.pageable.PageableUtils.constructPageable;
+import static backend.pageable.PageableUtils.validatePagination;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -126,8 +128,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductoDtoResponse> listAll(Integer page, Integer size, String orderBy) {
-        Utils.validatePagination(page, size, orderBy);
-        Pageable pageable = PageableUtils.constructPageable(page, size, orderBy);
+        Paginado paginado = new Paginado(page, size, orderBy);
+        validatePagination(paginado);
+        Pageable pageable = constructPageable(paginado);
 
         Page<Producto> productos = productoRepository.findAll(pageable);
 
@@ -154,10 +157,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductoDtoResponse> listByname(String nombre, Paginado paginado) {
-        Utils.validatePagination(paginado.page(), paginado.size(), paginado.orderBy());
+        validatePagination(paginado);
         validateNombre(nombre);
 
-        Pageable pageable = PageableUtils.constructPageable(paginado.page(), paginado.size(), paginado.orderBy());
+        Pageable pageable = constructPageable(paginado);
 
         Page<Producto> productos = productoRepository.findAllByNombreIgnoreCaseContaining(nombre, pageable);
 

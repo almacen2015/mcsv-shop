@@ -4,7 +4,6 @@ import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
 import backend.inventoryservice.security.TestSecurityConfig;
 import backend.inventoryservice.services.MovimientoService;
-import backend.inventoryservice.util.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

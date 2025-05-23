@@ -7,7 +7,6 @@ import backend.saleservice.models.dtos.response.DetailSaleResponseDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
 import backend.saleservice.security.TestSecurityConfig;
 import backend.saleservice.services.SaleService;
-import backend.saleservice.util.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

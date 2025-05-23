@@ -1,5 +1,7 @@
 package backend.saleservice.services.impl;
 
+import backend.pageable.PageableUtils;
+import backend.pageable.Paginado;
 import backend.saleservice.client.ClientFeign;
 import backend.saleservice.client.InventoryClient;
 import backend.saleservice.client.ProductClient;
@@ -16,7 +18,7 @@ import backend.saleservice.models.mapper.DetailSaleMapper;
 import backend.saleservice.models.mapper.SaleMapper;
 import backend.saleservice.repositories.SaleRepository;
 import backend.saleservice.services.SaleService;
-import backend.saleservice.util.Paginado;
+import backend.utils.Utils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -44,10 +46,10 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Page<SaleResponseDto> getSalesByClient(Integer clientId, Paginado paginado) {
-        validatePaginado(paginado);
+        PageableUtils.validatePagination(paginado);
         ClientResponseDTO client = validateClientId(clientId);
 
-        Pageable pageable = constructPageable(paginado);
+        Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Venta> ventas = repository.findByClientId(clientId, pageable);
 
@@ -105,8 +107,9 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public Page<SaleResponseDto> getAll(Integer page, Integer size, String orderBy) {
-        validatePaginado(page, size, orderBy);
-        Pageable pageable = constructPageable(page, size, orderBy);
+        Paginado paginado = new Paginado(page, size, orderBy);
+        PageableUtils.validatePagination(paginado);
+        Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Venta> ventas = repository.findAll(pageable);
         List<SaleResponseDto> response = new ArrayList<>();
@@ -128,7 +131,7 @@ public class SaleServiceImpl implements SaleService {
 
     private Double calculateSubtotal(Double precio, Integer quantity) {
         double subTotal;
-        if (precio == null || precio <= 0) {
+        if (Utils.isNotPositive(precio.intValue())) {
             throw new SaleException(SaleException.PRICE_INVALID);
         }
         subTotal = precio * quantity;
@@ -137,30 +140,12 @@ public class SaleServiceImpl implements SaleService {
     }
 
     private ClientResponseDTO validateClientId(Integer id) {
-        if (id == null || id <= 0) {
+        if (Utils.isNotPositive(id)) {
             throw new SaleException(SaleException.CLIENT_ID_INVALID);
         }
 
         ClientResponseDTO client = clientFeign.getClient(id.longValue());
         return client;
-    }
-
-    private PageRequest constructPageable(Paginado paginado) {
-        return PageRequest.of(paginado.page() - 1, paginado.size(), Sort.by(paginado.orderBy()).descending());
-    }
-
-    private void validatePaginado(Paginado paginado) {
-        if (paginado.page() == null || paginado.page() <= 0) {
-            throw new SaleException(SaleException.PAGE_NUMBER_INVALID);
-        }
-
-        if (paginado.size() == null || paginado.size() <= 0) {
-            throw new SaleException(SaleException.SIZE_NUMBER_INVALID);
-        }
-
-        if (paginado.orderBy() == null || paginado.orderBy().isBlank()) {
-            throw new SaleException(SaleException.SORT_NAME_INVALID);
-        }
     }
 
     private void validateDetails(List<DetalleVenta> details) {
@@ -196,14 +181,8 @@ public class SaleServiceImpl implements SaleService {
         }
     }
 
-    private void validateProductId(Integer id) {
-        if (id == null || id >= 0) {
-            throw new SaleException(SaleException.PRODUCT_ID_INVALID);
-        }
-    }
-
     private void validateQuantity(Integer quantity) {
-        if (quantity == null || quantity <= 0) {
+        if (Utils.isNotPositive(quantity)) {
             throw new SaleException(SaleException.QUANTITY_INVALID);
         }
     }
@@ -211,24 +190,6 @@ public class SaleServiceImpl implements SaleService {
     private void validateQuantityGreaterThanStock(Integer quantity, Integer stock) {
         if (quantity > stock) {
             throw new SaleException(SaleException.QUANTITY_GREATER_THAN_STOCK);
-        }
-    }
-
-    private PageRequest constructPageable(Integer page, Integer size, String orderBy) {
-        return PageRequest.of(page - 1, size, Sort.by(orderBy).descending());
-    }
-
-    private void validatePaginado(Integer page, Integer size, String orderBy) {
-        if (page <= 0) {
-            throw new SaleException(SaleException.PAGE_NUMBER_INVALID);
-        }
-
-        if (size <= 0) {
-            throw new SaleException(SaleException.SIZE_NUMBER_INVALID);
-        }
-
-        if (orderBy == null || orderBy.isBlank()) {
-            throw new SaleException(SaleException.SORT_NAME_INVALID);
         }
     }
 }

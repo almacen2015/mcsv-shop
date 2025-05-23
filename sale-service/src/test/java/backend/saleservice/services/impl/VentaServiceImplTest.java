@@ -14,7 +14,6 @@ import backend.saleservice.models.dtos.response.MovementResponseDto;
 import backend.saleservice.models.dtos.response.ProductResponseDto;
 import backend.saleservice.models.dtos.response.SaleResponseDto;
 import backend.saleservice.repositories.SaleRepository;
-import backend.saleservice.util.Paginado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

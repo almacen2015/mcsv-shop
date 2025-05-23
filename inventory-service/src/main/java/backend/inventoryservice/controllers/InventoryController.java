@@ -3,7 +3,6 @@ package backend.inventoryservice.controllers;
 import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
 import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
 import backend.inventoryservice.services.MovimientoService;
-import backend.inventoryservice.util.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
