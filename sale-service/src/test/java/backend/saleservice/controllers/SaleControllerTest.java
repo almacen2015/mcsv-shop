@@ -1,10 +1,11 @@
 package backend.saleservice.controllers;
 
+import backend.pageable.Paginado;
 import backend.saleservice.exceptions.SaleException;
-import backend.saleservice.models.dtos.request.DetailSaleRequestDto;
-import backend.saleservice.models.dtos.request.SaleRequestDto;
-import backend.saleservice.models.dtos.response.DetailSaleResponseDto;
-import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.dto.request.DetailSaleRequestDto;
+import backend.dto.request.SaleRequestDto;
+import backend.dto.response.DetailSaleDtoResponse;
+import backend.dto.response.SaleDtoResponse;
 import backend.saleservice.security.TestSecurityConfig;
 import backend.saleservice.services.SaleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -137,19 +138,19 @@ class SaleControllerTest {
         DetailSaleRequestDto detailSaleRequestDto = new DetailSaleRequestDto(1, 10);
         SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detailSaleRequestDto));
 
-        DetailSaleResponseDto detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
-        SaleResponseDto saleResponseDto1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1));
+        DetailSaleDtoResponse detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
+        SaleDtoResponse saleDtoResponse1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1));
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenReturn(saleResponseDto1);
+        when(service.add(any(SaleRequestDto.class))).thenReturn(saleDtoResponse1);
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(saleResponseDto1.id()))
-                .andExpect(jsonPath("$.client").value(saleResponseDto1.client()));
+                .andExpect(jsonPath("$.id").value(saleDtoResponse1.id()))
+                .andExpect(jsonPath("$.client").value(saleDtoResponse1.client()));
 
         verify(service, times(1)).add(eq(requestDto));
     }
@@ -236,11 +237,11 @@ class SaleControllerTest {
 
     @Test
     void getByClient_whenDataExists_returnsPageSale() throws Exception {
-        DetailSaleResponseDto detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
-        DetailSaleResponseDto detalle2 = constructDetailSaleResponseDto(2, 5, 5.00, 25.00);
-        SaleResponseDto saleResponseDto1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1, detalle2));
+        DetailSaleDtoResponse detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
+        DetailSaleDtoResponse detalle2 = constructDetailSaleResponseDto(2, 5, 5.00, 25.00);
+        SaleDtoResponse saleDtoResponse1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1, detalle2));
 
-        List<SaleResponseDto> ventas = List.of(saleResponseDto1);
+        List<SaleDtoResponse> ventas = List.of(saleDtoResponse1);
 
         Paginado paginado = new Paginado(1, 10, "id");
         String json = objectMapper.writeValueAsString(paginado);
@@ -318,15 +319,15 @@ class SaleControllerTest {
 
     @Test
     void list_whenDataExists_returnsPageSale() throws Exception {
-        DetailSaleResponseDto detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
-        DetailSaleResponseDto detalle2 = constructDetailSaleResponseDto(2, 5, 5.00, 25.00);
-        DetailSaleResponseDto detalle3 = constructDetailSaleResponseDto(1, 10, 5.00, 50.00);
-        DetailSaleResponseDto detalle4 = constructDetailSaleResponseDto(2, 5, 5.00, 25.00);
+        DetailSaleDtoResponse detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
+        DetailSaleDtoResponse detalle2 = constructDetailSaleResponseDto(2, 5, 5.00, 25.00);
+        DetailSaleDtoResponse detalle3 = constructDetailSaleResponseDto(1, 10, 5.00, 50.00);
+        DetailSaleDtoResponse detalle4 = constructDetailSaleResponseDto(2, 5, 5.00, 25.00);
 
-        SaleResponseDto saleResponseDto1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1, detalle2));
-        SaleResponseDto saleResponseDto2 = constructSaleResponseDto("2", "Luis Torres", "2025-10-10", 75.00, List.of(detalle3, detalle4));
+        SaleDtoResponse saleDtoResponse1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1, detalle2));
+        SaleDtoResponse saleDtoResponse2 = constructSaleResponseDto("2", "Luis Torres", "2025-10-10", 75.00, List.of(detalle3, detalle4));
 
-        List<SaleResponseDto> ventas = List.of(saleResponseDto1, saleResponseDto2);
+        List<SaleDtoResponse> ventas = List.of(saleDtoResponse1, saleDtoResponse2);
 
         when(service.getAll(1, 10, "id")).thenReturn(new PageImpl<>(ventas));
 
@@ -342,11 +343,11 @@ class SaleControllerTest {
 
     }
 
-    private DetailSaleResponseDto constructDetailSaleResponseDto(Integer productId, Integer quantity, Double price, Double subTotal) {
-        return new DetailSaleResponseDto(productId, quantity, price, subTotal);
+    private DetailSaleDtoResponse constructDetailSaleResponseDto(Integer productId, Integer quantity, Double price, Double subTotal) {
+        return new DetailSaleDtoResponse(productId, quantity, price, subTotal);
     }
 
-    private SaleResponseDto constructSaleResponseDto(String id, String client, String date, Double total, List<DetailSaleResponseDto> details) {
-        return new SaleResponseDto(id, client, date, total, details);
+    private SaleDtoResponse constructSaleResponseDto(String id, String client, String date, Double total, List<DetailSaleDtoResponse> details) {
+        return new SaleDtoResponse(id, client, date, total, details);
     }
 }

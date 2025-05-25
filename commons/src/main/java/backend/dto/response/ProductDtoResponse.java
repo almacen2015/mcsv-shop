@@ -1,8 +1,8 @@
-package backend.saleservice.models.dtos.response;
+package backend.dto.response;
 
 import java.time.LocalDate;
 
-public record ProductResponseDto(Integer id,
+public record ProductDtoResponse(Integer id,
                                  String nombre,
                                  String descripcion,
                                  Double precio,

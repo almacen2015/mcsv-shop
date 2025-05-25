@@ -1,8 +1,8 @@
 package backend.productservice.controllers;
 
 import backend.pageable.Paginado;
-import backend.productservice.models.dto.request.ProductoDtoRequest;
-import backend.productservice.models.dto.response.ProductoDtoResponse;
+import backend.dto.request.ProductoDtoRequest;
+import backend.dto.response.ProductDtoResponse;
 import backend.productservice.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,8 +32,8 @@ public class ProductoController {
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
     @PostMapping
-    public ResponseEntity<ProductoDtoResponse> add(@RequestBody ProductoDtoRequest dto) {
-        ProductoDtoResponse producto = productService.add(dto);
+    public ResponseEntity<ProductDtoResponse> add(@RequestBody ProductoDtoRequest dto) {
+        ProductDtoResponse producto = productService.add(dto);
         return new ResponseEntity<>(producto, HttpStatus.CREATED);
     }
 
@@ -43,9 +43,9 @@ public class ProductoController {
             @ApiResponse(responseCode = "200", description = "Productos listados")
     })
     @GetMapping()
-    public ResponseEntity<Page<ProductoDtoResponse>> list(@RequestParam Integer page,
-                                                          @RequestParam Integer size,
-                                                          @RequestParam String orderBy) {
+    public ResponseEntity<Page<ProductDtoResponse>> list(@RequestParam Integer page,
+                                                         @RequestParam Integer size,
+                                                         @RequestParam String orderBy) {
         return new ResponseEntity<>(productService.listAll(page, size, orderBy), HttpStatus.OK);
     }
 
@@ -56,8 +56,8 @@ public class ProductoController {
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProductoDtoResponse> getById(@PathVariable Integer id) {
-        ProductoDtoResponse producto = productService.getById(id);
+    public ResponseEntity<ProductDtoResponse> getById(@PathVariable Integer id) {
+        ProductDtoResponse producto = productService.getById(id);
         return new ResponseEntity<>(producto, HttpStatus.OK);
     }
 
@@ -68,7 +68,7 @@ public class ProductoController {
             @ApiResponse(responseCode = "404", description = "Producto no encontrado")
     })
     @PostMapping("/nombre/{nombre}")
-    public ResponseEntity<Page<ProductoDtoResponse>> getByName(@PathVariable String nombre, @RequestBody Paginado paginado) {
+    public ResponseEntity<Page<ProductDtoResponse>> getByName(@PathVariable String nombre, @RequestBody Paginado paginado) {
         return new ResponseEntity<>(productService.listByname(nombre, paginado), HttpStatus.OK);
     }
 
@@ -79,8 +79,8 @@ public class ProductoController {
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductoDtoResponse> update(@RequestBody ProductoDtoRequest dto, @PathVariable Integer id) {
-        ProductoDtoResponse producto = productService.update(dto, id);
+    public ResponseEntity<ProductDtoResponse> update(@RequestBody ProductoDtoRequest dto, @PathVariable Integer id) {
+        ProductDtoResponse producto = productService.update(dto, id);
         return new ResponseEntity<>(producto, HttpStatus.OK);
     }
 

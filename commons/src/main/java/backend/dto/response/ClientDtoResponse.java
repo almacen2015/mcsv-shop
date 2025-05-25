@@ -1,6 +1,6 @@
-package backend.saleservice.models.dtos.response;
+package backend.dto.response;
 
-public record ClientResponseDTO(Long id,
+public record ClientDtoResponse(Long id,
                                 String nombre,
                                 String apellido,
                                 String tipoDocumento,

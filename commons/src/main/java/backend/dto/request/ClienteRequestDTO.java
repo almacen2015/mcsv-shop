@@ -1,4 +1,4 @@
-package backend.clientservice.models.dtos;
+package backend.dto.request;
 
 public record ClienteRequestDTO(String nombre,
                                 String apellido,

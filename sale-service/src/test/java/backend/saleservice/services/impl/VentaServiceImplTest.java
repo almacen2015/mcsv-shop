@@ -1,18 +1,20 @@
 package backend.saleservice.services.impl;
 
+import backend.dto.response.ClientDtoResponse;
+import backend.dto.response.MovementDtoResponse;
+import backend.dto.response.ProductDtoResponse;
+import backend.exception.UtilException;
+import backend.pageable.Paginado;
 import backend.saleservice.client.ClientFeign;
 import backend.saleservice.client.InventoryClient;
 import backend.saleservice.client.ProductClient;
 import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
 import backend.saleservice.models.documents.Venta;
-import backend.saleservice.models.dtos.request.DetailSaleRequestDto;
-import backend.saleservice.models.dtos.request.MovementRequestDto;
-import backend.saleservice.models.dtos.request.SaleRequestDto;
-import backend.saleservice.models.dtos.response.ClientResponseDTO;
-import backend.saleservice.models.dtos.response.MovementResponseDto;
-import backend.saleservice.models.dtos.response.ProductResponseDto;
-import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.dto.request.DetailSaleRequestDto;
+import backend.dto.request.MovementDtoRequest;
+import backend.dto.request.SaleRequestDto;
+import backend.dto.response.SaleDtoResponse;
 import backend.saleservice.repositories.SaleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +63,7 @@ class VentaServiceImplTest {
     void add_whenPriceIsNotValid_returnsError() {
         DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
         SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
-        ProductResponseDto productoDtoResponse = new ProductResponseDto(
+        ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -81,7 +83,7 @@ class VentaServiceImplTest {
     void add_whenStockIsNotValid_returnsError() {
         DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
         SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
-        ProductResponseDto productoDtoResponse = new ProductResponseDto(
+        ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -103,7 +105,7 @@ class VentaServiceImplTest {
         DetailSaleRequestDto detalleVentaRequestDto2 = new DetailSaleRequestDto(1, 5);
         SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto, detalleVentaRequestDto2));
 
-        ProductResponseDto productoDtoResponse = new ProductResponseDto(
+        ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -157,7 +159,7 @@ class VentaServiceImplTest {
         DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
         SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
 
-        ClientResponseDTO clienteResponseDTO = new ClientResponseDTO(
+        ClientDtoResponse clienteResponseDTO = new ClientDtoResponse(
                 1L,
                 "VICTOR",
                 "ORBEGOZO",
@@ -165,7 +167,7 @@ class VentaServiceImplTest {
                 "2000-10-10",
                 "12345678");
 
-        ProductResponseDto productoDtoResponse = new ProductResponseDto(
+        ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
                 "Coca Cola",
                 "Coca Cola",
@@ -175,14 +177,14 @@ class VentaServiceImplTest {
                 10
         );
 
-        MovementResponseDto movimientoDtoResponse = new MovementResponseDto(1, 1, 10, "SALIDA", "2025-10-10");
+        MovementDtoResponse movimientoDtoResponse = new MovementDtoResponse(1, 1, 10, "SALIDA", "2025-10-10");
 
         when(repository.save(any(Venta.class))).thenReturn(venta1);
         when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
         when(productClient.getProduct(any(Integer.class))).thenReturn(productoDtoResponse);
-        when(movementClient.createMovimientoDto(any(MovementRequestDto.class))).thenReturn(movimientoDtoResponse);
+        when(movementClient.createMovimientoDto(any(MovementDtoRequest.class))).thenReturn(movimientoDtoResponse);
 
-        SaleResponseDto response = service.add(ventaRequestDto);
+        SaleDtoResponse response = service.add(ventaRequestDto);
 
         assertThat(response).isNotNull();
     }
@@ -191,25 +193,25 @@ class VentaServiceImplTest {
     void getSalesByClient_whenOrderByIsNotValid_returnsError() {
         Paginado paginado = new Paginado(1, 10, null);
 
-        SaleException exception = assertThrows(SaleException.class, () -> service.getSalesByClient(1, paginado));
+        UtilException exception = assertThrows(UtilException.class, () -> service.getSalesByClient(1, paginado));
 
-        assertThat(exception.getMessage()).isEqualTo(SaleException.SORT_NAME_INVALID);
+        assertThat(exception.getMessage()).isEqualTo(UtilException.SORT_NAME_INVALID);
     }
 
     @Test
     void getSalesByClient_whenSizeIsNotValid_returnsError() {
         Paginado paginado = new Paginado(1, null, "id");
-        SaleException exception = assertThrows(SaleException.class, () -> service.getSalesByClient(1, paginado));
-        assertThat(exception.getMessage()).isEqualTo(SaleException.SIZE_NUMBER_INVALID);
+        UtilException exception = assertThrows(UtilException.class, () -> service.getSalesByClient(1, paginado));
+        assertThat(exception.getMessage()).isEqualTo(UtilException.SIZE_NUMBER_INVALID);
     }
 
     @Test
     void getSalesByClient_whenPageIsNotValid_returnsError() {
         Paginado paginado = new Paginado(0, 10, "id");
 
-        SaleException exception = assertThrows(SaleException.class, () -> service.getSalesByClient(1, paginado));
+        UtilException exception = assertThrows(UtilException.class, () -> service.getSalesByClient(1, paginado));
 
-        assertThat(exception.getMessage()).isEqualTo(SaleException.PAGE_NUMBER_INVALID);
+        assertThat(exception.getMessage()).isEqualTo(UtilException.PAGE_NUMBER_INVALID);
     }
 
     @Test
@@ -224,7 +226,7 @@ class VentaServiceImplTest {
         Paginado paginado = new Paginado(1, 10, "id");
         when(repository.findByClientId(any(Integer.class), any(Pageable.class))).thenReturn(Page.empty());
 
-        Page<SaleResponseDto> response = service.getSalesByClient(1, paginado);
+        Page<SaleDtoResponse> response = service.getSalesByClient(1, paginado);
 
         assertThat(response.getContent()).isEmpty();
     }
@@ -239,7 +241,7 @@ class VentaServiceImplTest {
         Venta venta1 = createVenta("1", 1, detalles);
         Venta venta2 = createVenta("2", 1, detalles);
 
-        ClientResponseDTO clienteResponseDTO = new ClientResponseDTO(
+        ClientDtoResponse clienteResponseDTO = new ClientDtoResponse(
                 1L,
                 "VICTOR",
                 "ORBEGOZO",
@@ -253,37 +255,37 @@ class VentaServiceImplTest {
         when(repository.findByClientId(any(Integer.class), any(Pageable.class))).thenReturn(new PageImpl<>(ventas));
         when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
 
-        Page<SaleResponseDto> response = service.getSalesByClient(1, paginado);
+        Page<SaleDtoResponse> response = service.getSalesByClient(1, paginado);
 
         assertThat(response.getContent().size()).isEqualTo(2);
     }
 
     @Test
     void getAll_whenOrderByIsNotValid_returnsError() {
-        SaleException exception = assertThrows(SaleException.class, () -> service.getAll(1, 10, "   "));
+        UtilException exception = assertThrows(UtilException.class, () -> service.getAll(1, 10, "   "));
 
-        assertThat(exception.getMessage()).isEqualTo(SaleException.SORT_NAME_INVALID);
+        assertThat(exception.getMessage()).isEqualTo(UtilException.SORT_NAME_INVALID);
     }
 
     @Test
     void getAll_whenSizeIsNotValid_returnsError() {
-        SaleException exception = assertThrows(SaleException.class, () -> service.getAll(1, 0, "id"));
+        UtilException exception = assertThrows(UtilException.class, () -> service.getAll(1, 0, "id"));
 
-        assertThat(exception.getMessage()).isEqualTo(SaleException.SIZE_NUMBER_INVALID);
+        assertThat(exception.getMessage()).isEqualTo(UtilException.SIZE_NUMBER_INVALID);
     }
 
     @Test
     void getAll_whenPageIsNotValid_returnsError() {
-        SaleException exception = assertThrows(SaleException.class, () -> service.getAll(0, 10, "id"));
+        UtilException exception = assertThrows(UtilException.class, () -> service.getAll(0, 10, "id"));
 
-        assertThat(exception.getMessage()).isEqualTo(SaleException.PAGE_NUMBER_INVALID);
+        assertThat(exception.getMessage()).isEqualTo(UtilException.PAGE_NUMBER_INVALID);
     }
 
     @Test
     void getAll_whenVentaNoExists_returnsEmptyList() {
         when(repository.findAll(any(Pageable.class))).thenReturn(Page.empty());
 
-        Page<SaleResponseDto> response = service.getAll(1, 10, "id");
+        Page<SaleDtoResponse> response = service.getAll(1, 10, "id");
 
         assertThat(response.getContent()).isEmpty();
     }
@@ -300,7 +302,7 @@ class VentaServiceImplTest {
 
         List<Venta> ventas = List.of(venta1, venta2);
 
-        ClientResponseDTO clienteResponseDTO = new ClientResponseDTO(
+        ClientDtoResponse clienteResponseDTO = new ClientDtoResponse(
                 1L,
                 "VICTOR",
                 "ORBEGOZO",
@@ -311,7 +313,7 @@ class VentaServiceImplTest {
         when(repository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(ventas));
         when(clientFeign.getClient(any(Long.class))).thenReturn(clienteResponseDTO);
 
-        Page<SaleResponseDto> response = service.getAll(1, 10, "id");
+        Page<SaleDtoResponse> response = service.getAll(1, 10, "id");
 
         assertThat(response).isNotNull();
         assertThat(response.getContent().size()).isEqualTo(2);

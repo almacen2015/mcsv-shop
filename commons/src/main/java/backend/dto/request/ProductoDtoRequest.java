@@ -1,4 +1,4 @@
-package backend.productservice.models.dto.request;
+package backend.dto.request;
 
 public record ProductoDtoRequest(String nombre,
                                  String descripcion,

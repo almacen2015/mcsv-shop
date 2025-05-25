@@ -1,7 +1,7 @@
 package backend.clientservice.controllers;
 
-import backend.clientservice.models.dtos.ClienteRequestDTO;
-import backend.clientservice.models.dtos.ClienteResponseDTO;
+import backend.dto.request.ClienteRequestDTO;
+import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.services.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,9 +30,9 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @GetMapping
-    public ResponseEntity<Page<ClienteResponseDTO>> listAll(@RequestParam Integer page,
-                                                            @RequestParam Integer size,
-                                                            @RequestParam String orderBy) {
+    public ResponseEntity<Page<ClientDtoResponse>> listAll(@RequestParam Integer page,
+                                                           @RequestParam Integer size,
+                                                           @RequestParam String orderBy) {
         return new ResponseEntity<>(clientService.listAll(page, size, orderBy), HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> add(@RequestBody ClienteRequestDTO cliente) {
+    public ResponseEntity<ClientDtoResponse> add(@RequestBody ClienteRequestDTO cliente) {
         return new ResponseEntity<>(clientService.add(cliente), HttpStatus.OK);
     }
 
@@ -58,7 +58,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<ClientDtoResponse> getById(@PathVariable Long id) {
         return new ResponseEntity<>(clientService.getById(id), HttpStatus.OK);
     }
 
@@ -71,7 +71,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @GetMapping("/document/{documentNumber}/{documentType}")
-    public ResponseEntity<ClienteResponseDTO> getByDocumentNumber(@PathVariable String documentNumber, @PathVariable String documentType) {
+    public ResponseEntity<ClientDtoResponse> getByDocumentNumber(@PathVariable String documentNumber, @PathVariable String documentType) {
         return new ResponseEntity<>(clientService.getByDocumentNumber(documentNumber, documentType), HttpStatus.OK);
     }
 

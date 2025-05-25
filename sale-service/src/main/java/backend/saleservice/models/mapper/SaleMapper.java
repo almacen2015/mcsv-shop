@@ -1,8 +1,8 @@
 package backend.saleservice.models.mapper;
 
 import backend.saleservice.models.documents.Venta;
-import backend.saleservice.models.dtos.request.SaleRequestDto;
-import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.dto.request.SaleRequestDto;
+import backend.dto.response.SaleDtoResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -18,5 +18,5 @@ public interface SaleMapper {
     @Mapping(target = "details.subtotal", ignore = true)
     Venta toEntity(SaleRequestDto requestDto);
 
-    SaleResponseDto toDto(Venta venta);
+    SaleDtoResponse toDto(Venta venta);
 }

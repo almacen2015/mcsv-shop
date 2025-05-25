@@ -1,13 +1,15 @@
 package backend.inventoryservice.services.impl;
 
+import backend.dto.request.MovementDtoRequest;
+import backend.dto.response.ProductDtoResponse;
+import backend.exception.UtilException;
 import backend.inventoryservice.client.ProductClient;
 import backend.inventoryservice.exceptions.InventoryException;
-import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
-import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
-import backend.inventoryservice.models.dtos.ProductoDtoResponse;
+import backend.dto.response.MovementDtoResponse;
 import backend.inventoryservice.models.entities.Movimiento;
 import backend.inventoryservice.models.entities.TipoMovimiento;
 import backend.inventoryservice.repositories.MovimientoRepository;
+import backend.pageable.Paginado;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,7 +48,7 @@ class MovimientoServiceImplTest {
         Paginado paginado = new Paginado(1, 10, "id");
 
         // Act
-        assertThrows(InventoryException.class, () -> service.listByIdProducto(idProducto, paginado));
+        assertThrows(UtilException.class, () -> service.listByIdProducto(idProducto, paginado));
     }
 
     @Test
@@ -55,7 +57,7 @@ class MovimientoServiceImplTest {
         when(movimientoRepository.findAllByProductoId(any(Integer.class), any(Pageable.class))).thenReturn(Page.empty());
         Paginado paginado = new Paginado(1, 10, "id");
         // Act
-        Page<MovimientoDtoResponse> movimientos = service.listByIdProducto(1, paginado);
+        Page<MovementDtoResponse> movimientos = service.listByIdProducto(1, paginado);
 
         // Assert
         assertNull(movimientos);
@@ -81,7 +83,7 @@ class MovimientoServiceImplTest {
         when(movimientoRepository.findAllByProductoId(any(Integer.class), any(Pageable.class))).thenReturn(new PageImpl<>(listMovimientos, pageable, listMovimientos.size()));
 
         // Act
-        Page<MovimientoDtoResponse> movimientos = service.listByIdProducto(1, paginado);
+        Page<MovementDtoResponse> movimientos = service.listByIdProducto(1, paginado);
 
         // Assert
         assertNotNull(movimientos);
@@ -91,10 +93,10 @@ class MovimientoServiceImplTest {
     @Test
     void testRegistrarMovimiento_tipoMovimientoSalidaSinStock_retornaMovimientoException() {
         // Arrange
-        MovimientoDtoRequest dto = new MovimientoDtoRequest(1, 10, "SALIDA");
+        MovementDtoRequest dto = new MovementDtoRequest(1, 10, "SALIDA");
 
         // Act
-        when(productClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 0));
+        when(productClient.getProduct(1)).thenReturn(new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 0));
 
         assertThrows(InventoryException.class, () -> service.add(dto));
         // Assert
@@ -103,7 +105,7 @@ class MovimientoServiceImplTest {
     @Test
     void testRegistrarMovimiento_productoNoExiste_retornaMovimientoException() {
         // Arrange
-        MovimientoDtoRequest dto = new MovimientoDtoRequest(1, 10, "ENTRADA");
+        MovementDtoRequest dto = new MovementDtoRequest(1, 10, "ENTRADA");
 
         // Act
         when(productClient.getProduct(1)).thenReturn(null);
@@ -115,7 +117,7 @@ class MovimientoServiceImplTest {
     @Test
     void testRegistrarMovimiento_cantidadMenorZero_retornaMovimientoException() {
         // Arrange
-        MovimientoDtoRequest dto = new MovimientoDtoRequest(1, -10, "ENTRADA");
+        MovementDtoRequest dto = new MovementDtoRequest(1, -10, "ENTRADA");
 
         // Act
 
@@ -126,7 +128,7 @@ class MovimientoServiceImplTest {
     @Test
     void TestRegistrarMovimiento_MovimientoValido_RetornaMovimiento() {
         // Arrange
-        MovimientoDtoRequest dto = new MovimientoDtoRequest(1, 10, "ENTRADA");
+        MovementDtoRequest dto = new MovementDtoRequest(1, 10, "ENTRADA");
         Movimiento movimiento = Movimiento.builder()
                 .id(1)
                 .productoId(1)
@@ -137,13 +139,13 @@ class MovimientoServiceImplTest {
 
 
         when(movimientoRepository.save(any(Movimiento.class))).thenReturn(movimiento);
-        when(productClient.getProduct(1)).thenReturn(new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 10));
+        when(productClient.getProduct(1)).thenReturn(new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.of(2021, 10, 10), 10));
 
-        MovimientoDtoResponse movimientoDtoResponse = service.add(dto);
+        MovementDtoResponse movementDtoResponse = service.add(dto);
 
         // Assert
-        assertNotNull(movimientoDtoResponse);
-        assertEquals(1, movimientoDtoResponse.id());
+        assertNotNull(movementDtoResponse);
+        assertEquals(1, movementDtoResponse.id());
 
     }
 

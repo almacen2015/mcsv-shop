@@ -5,8 +5,8 @@ import backend.productservice.enums.Estado;
 import backend.productservice.enums.TipoMovimiento;
 import backend.productservice.exceptions.ProductException;
 import backend.productservice.mappers.ProductoMapper;
-import backend.productservice.models.dto.request.ProductoDtoRequest;
-import backend.productservice.models.dto.response.ProductoDtoResponse;
+import backend.dto.request.ProductoDtoRequest;
+import backend.dto.response.ProductDtoResponse;
 import backend.productservice.models.entities.Producto;
 import backend.productservice.repositories.ProductoRepository;
 import backend.productservice.services.ProductService;
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public ProductoDtoResponse update(ProductoDtoRequest dto, Integer id) {
+    public ProductDtoResponse update(ProductoDtoRequest dto, Integer id) {
         validateData(dto);
         Utils.validateIdProduct(id);
 
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public ProductoDtoResponse add(ProductoDtoRequest dto) {
+    public ProductDtoResponse add(ProductoDtoRequest dto) {
         validateData(dto);
         Producto producto = productoMapper.toEntity(dto);
         producto.setEstado(Estado.ACTIVO.getValor());
@@ -127,14 +127,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductoDtoResponse> listAll(Integer page, Integer size, String orderBy) {
+    public Page<ProductDtoResponse> listAll(Integer page, Integer size, String orderBy) {
         Paginado paginado = new Paginado(page, size, orderBy);
         validatePagination(paginado);
         Pageable pageable = constructPageable(paginado);
 
         Page<Producto> productos = productoRepository.findAll(pageable);
 
-        List<ProductoDtoResponse> response = productos.getContent().stream()
+        List<ProductDtoResponse> response = productos.getContent().stream()
                 .map(productoMapper::toDto)
                 .toList();
 
@@ -142,7 +142,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductoDtoResponse getById(Integer id) {
+    public ProductDtoResponse getById(Integer id) {
         Utils.validateIdProduct(id);
 
         Optional<Producto> producto = productoRepository.findById(id);
@@ -150,13 +150,13 @@ public class ProductServiceImpl implements ProductService {
             return null;
         }
 
-        ProductoDtoResponse response = productoMapper.toDto(producto.get());
+        ProductDtoResponse response = productoMapper.toDto(producto.get());
 
         return response;
     }
 
     @Override
-    public Page<ProductoDtoResponse> listByname(String nombre, Paginado paginado) {
+    public Page<ProductDtoResponse> listByname(String nombre, Paginado paginado) {
         validatePagination(paginado);
         validateNombre(nombre);
 
@@ -168,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
             return null;
         }
 
-        List<ProductoDtoResponse> response = productos.getContent().stream()
+        List<ProductDtoResponse> response = productos.getContent().stream()
                 .map(productoMapper::toDto).toList();
 
         return new PageImpl<>(response, pageable, productos.getTotalElements());

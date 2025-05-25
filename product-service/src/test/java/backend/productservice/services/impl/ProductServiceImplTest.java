@@ -1,11 +1,11 @@
 package backend.productservice.services.impl;
 
+import backend.dto.request.ProductoDtoRequest;
+import backend.dto.response.ProductDtoResponse;
+import backend.pageable.Paginado;
 import backend.productservice.exceptions.ProductException;
-import backend.productservice.models.dto.request.ProductoDtoRequest;
-import backend.productservice.models.dto.response.ProductoDtoResponse;
 import backend.productservice.models.entities.Producto;
 import backend.productservice.repositories.ProductoRepository;
-import backend.productservice.util.Paginado;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,12 +59,12 @@ class ProductServiceImplTest {
         when(repository.findById(any(Integer.class))).thenReturn(Optional.of(producto));
         when(repository.save(any(Producto.class))).thenReturn(productoActualizado);
 
-        ProductoDtoResponse productoDtoResponse = service.update(dto, 1);
+        ProductDtoResponse productDtoResponse = service.update(dto, 1);
 
-        assertEquals(1, productoDtoResponse.id());
-        assertEquals("Producto 2", productoDtoResponse.nombre());
-        assertEquals("Descripcion 2", productoDtoResponse.descripcion());
-        assertEquals(200.0, productoDtoResponse.precio());
+        assertEquals(1, productDtoResponse.id());
+        assertEquals("Producto 2", productDtoResponse.nombre());
+        assertEquals("Descripcion 2", productDtoResponse.descripcion());
+        assertEquals(200.0, productDtoResponse.precio());
         verify(repository).save(producto);
     }
 
@@ -137,7 +138,7 @@ class ProductServiceImplTest {
         when(repository.findAllByNombreIgnoreCaseContaining(any(String.class), any(Pageable.class))).thenReturn(Page.empty());
 
         // Act
-        Page<ProductoDtoResponse> producto = service.listByname("Producto 1", paginado);
+        Page<ProductDtoResponse> producto = service.listByname("Producto 1", paginado);
 
         // Assert
         assertThat(producto).isNull();
@@ -166,7 +167,7 @@ class ProductServiceImplTest {
 
         // Act
         when(repository.findAllByNombreIgnoreCaseContaining(any(String.class), any(Pageable.class))).thenReturn(page);
-        Page<ProductoDtoResponse> productoDtoResponse = service.listByname("Producto 1", paginado);
+        Page<ProductDtoResponse> productoDtoResponse = service.listByname("Producto 1", paginado);
 
         // Assert
         assertThat(productoDtoResponse).isNotNull();
@@ -186,14 +187,14 @@ class ProductServiceImplTest {
 
         // Act
         when(repository.findById(1)).thenReturn(java.util.Optional.of(producto));
-        ProductoDtoResponse productoDtoResponse = service.getById(1);
+        ProductDtoResponse productDtoResponse = service.getById(1);
 
         // Assert
-        assertThat(productoDtoResponse).isNotNull();
-        assertThat(productoDtoResponse.id()).isEqualTo(1);
-        assertThat(productoDtoResponse.nombre()).isEqualTo("Producto 1");
-        assertThat(productoDtoResponse.descripcion()).isEqualTo("Descripcion 1");
-        assertThat(productoDtoResponse.precio()).isEqualTo(100.0);
+        assertThat(productDtoResponse).isNotNull();
+        assertThat(productDtoResponse.id()).isEqualTo(1);
+        assertThat(productDtoResponse.nombre()).isEqualTo("Producto 1");
+        assertThat(productDtoResponse.descripcion()).isEqualTo("Descripcion 1");
+        assertThat(productDtoResponse.precio()).isEqualTo(100.0);
     }
 
     @Test
@@ -202,7 +203,7 @@ class ProductServiceImplTest {
 
         // Act
         when(repository.findById(1)).thenReturn(java.util.Optional.empty());
-        ProductoDtoResponse producto = service.getById(1);
+        ProductDtoResponse producto = service.getById(1);
 
         // Assert
         assertThat(producto).isNull();
@@ -214,7 +215,7 @@ class ProductServiceImplTest {
         when(repository.findAll(any(Pageable.class))).thenReturn(Page.empty());
 
         // Act
-        Page<ProductoDtoResponse> productos = service.listAll(1, 10, "id");
+        Page<ProductDtoResponse> productos = service.listAll(1, 10, "id");
 
         // Assert
         assertThat(productos.getTotalElements()).isEqualTo(0);
@@ -247,7 +248,7 @@ class ProductServiceImplTest {
 
         // Act
         when(repository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(listaProductos, pageable, listaProductos.size()));
-        Page<ProductoDtoResponse> productos = service.listAll(1, 10, "id");
+        Page<ProductDtoResponse> productos = service.listAll(1, 10, "id");
 
         // Assert
         assertThat(productos).isNotNull();
@@ -304,13 +305,13 @@ class ProductServiceImplTest {
 
         // Act
         when(repository.save(any(Producto.class))).thenReturn(productoGuardado);
-        ProductoDtoResponse productoDtoResponse = service.add(dto);
+        ProductDtoResponse productDtoResponse = service.add(dto);
 
         // Assert
-        assertThat(productoDtoResponse).isNotNull();
-        assertThat(productoDtoResponse.id()).isGreaterThan(0);
-        assertThat(productoDtoResponse.nombre()).isEqualTo("Producto 1");
-        assertThat(productoDtoResponse.descripcion()).isEqualTo("Descripcion 1");
-        assertThat(productoDtoResponse.precio()).isEqualTo(100.0);
+        assertThat(productDtoResponse).isNotNull();
+        assertThat(productDtoResponse.id()).isGreaterThan(0);
+        assertThat(productDtoResponse.nombre()).isEqualTo("Producto 1");
+        assertThat(productDtoResponse.descripcion()).isEqualTo("Descripcion 1");
+        assertThat(productDtoResponse.precio()).isEqualTo(100.0);
     }
 }

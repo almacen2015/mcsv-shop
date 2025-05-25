@@ -1,4 +1,4 @@
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Client id invalid
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Client id invalid
 backend.saleservice.exceptions.SaleException: Client id invalid
 	at backend.saleservice.controllers.SaleController.getByClient(SaleController.java:58)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -146,7 +146,7 @@ backend.saleservice.exceptions.SaleException: Client id invalid
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Sort name is invalid
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Sort name is invalid
 backend.saleservice.exceptions.SaleException: Sort name is invalid
 	at backend.saleservice.controllers.SaleController.getByClient(SaleController.java:58)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -294,7 +294,7 @@ backend.saleservice.exceptions.SaleException: Sort name is invalid
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Size number can't be less or equals than 0
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Size number can't be less or equals than 0
 backend.saleservice.exceptions.SaleException: Size number can't be less or equals than 0
 	at backend.saleservice.controllers.SaleController.getByClient(SaleController.java:58)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -442,7 +442,7 @@ backend.saleservice.exceptions.SaleException: Size number can't be less or equal
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Sort name is invalid
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Sort name is invalid
 backend.saleservice.exceptions.SaleException: Sort name is invalid
 	at backend.saleservice.controllers.SaleController.list(SaleController.java:47)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -590,7 +590,7 @@ backend.saleservice.exceptions.SaleException: Sort name is invalid
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Page number can't be less or equals than 0
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Page number can't be less or equals than 0
 backend.saleservice.exceptions.SaleException: Page number can't be less or equals than 0
 	at backend.saleservice.controllers.SaleController.list(SaleController.java:47)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -738,7 +738,7 @@ backend.saleservice.exceptions.SaleException: Page number can't be less or equal
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Details invalid
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Details invalid
 backend.saleservice.exceptions.SaleException: Details invalid
 	at backend.saleservice.controllers.SaleController.createVenta(SaleController.java:34)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -886,7 +886,7 @@ backend.saleservice.exceptions.SaleException: Details invalid
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Product id invalid
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Product id invalid
 backend.saleservice.exceptions.SaleException: Product id invalid
 	at backend.saleservice.controllers.SaleController.createVenta(SaleController.java:34)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -1034,7 +1034,7 @@ backend.saleservice.exceptions.SaleException: Product id invalid
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Size number can't be less or equals than 0
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Size number can't be less or equals than 0
 backend.saleservice.exceptions.SaleException: Size number can't be less or equals than 0
 	at backend.saleservice.controllers.SaleController.list(SaleController.java:47)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -1182,7 +1182,7 @@ backend.saleservice.exceptions.SaleException: Size number can't be less or equal
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Product repeated
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Product repeated
 backend.saleservice.exceptions.SaleException: Product repeated
 	at backend.saleservice.controllers.SaleController.createVenta(SaleController.java:34)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -1330,7 +1330,7 @@ backend.saleservice.exceptions.SaleException: Product repeated
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Client id invalid
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Client id invalid
 backend.saleservice.exceptions.SaleException: Client id invalid
 	at backend.saleservice.controllers.SaleController.createVenta(SaleController.java:34)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -1478,7 +1478,7 @@ backend.saleservice.exceptions.SaleException: Client id invalid
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Quantity is greater than stock
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Quantity is greater than stock
 backend.saleservice.exceptions.SaleException: Quantity is greater than stock
 	at backend.saleservice.controllers.SaleController.createVenta(SaleController.java:34)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -1626,7 +1626,7 @@ backend.saleservice.exceptions.SaleException: Quantity is greater than stock
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:231)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
-2025-04-30 17:36:14 [main] ERROR b.s.e.advice.ExceptionAdvice - Page number can't be less or equals than 0
+2025-05-25 12:47:13 [main] ERROR b.s.e.advice.ExceptionAdvice - Page number can't be less or equals than 0
 backend.saleservice.exceptions.SaleException: Page number can't be less or equals than 0
 	at backend.saleservice.controllers.SaleController.getByClient(SaleController.java:58)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)

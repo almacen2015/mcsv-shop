@@ -1,4 +1,4 @@
-package backend.saleservice.models.dtos.request;
+package backend.dto.request;
 
 import java.util.List;
 

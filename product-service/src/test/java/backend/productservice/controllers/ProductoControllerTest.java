@@ -1,10 +1,10 @@
 package backend.productservice.controllers;
 
-import backend.productservice.models.dto.request.ProductoDtoRequest;
-import backend.productservice.models.dto.response.ProductoDtoResponse;
+import backend.dto.request.ProductoDtoRequest;
+import backend.dto.response.ProductDtoResponse;
+import backend.pageable.Paginado;
 import backend.productservice.security.TestSecurityConfig;
 import backend.productservice.services.ProductService;
-import backend.productservice.util.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ class ProductoControllerTest {
         // Arrange
         ProductoDtoRequest dto = new ProductoDtoRequest("Producto 2", "Descripcion 1", 100.0);
         String json = objectMapper.writeValueAsString(dto);
-        ProductoDtoResponse producto = new ProductoDtoResponse(1, "Producto 2", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
+        ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 2", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
 
         // Act
         when(service.update(any(ProductoDtoRequest.class), any(Integer.class))).thenReturn(producto);
@@ -62,7 +62,7 @@ class ProductoControllerTest {
     @Test
     void testActualizarStock() throws Exception {
         // Arrange
-        ProductoDtoResponse producto = new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
+        ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
 
         // Act
         doNothing().when(service).updateStock(1, 5, "SALIDA");
@@ -75,8 +75,8 @@ class ProductoControllerTest {
     @Test
     void testBuscarPorNombre() throws Exception {
         // Arrange
-        ProductoDtoResponse producto = new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
-        List<ProductoDtoResponse> productos = List.of(producto);
+        ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
+        List<ProductDtoResponse> productos = List.of(producto);
         Pageable pageable = PageRequest.of(1 - 1, 10, Sort.by("id").descending());
         Paginado paginado = new Paginado(1, 10, "id");
 
@@ -100,7 +100,7 @@ class ProductoControllerTest {
     @Test
     void testBuscarPorId() throws Exception {
         // Arrange
-        ProductoDtoResponse producto = new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
+        ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
 
         // Act
         when(service.getById(1)).thenReturn(producto);
@@ -118,10 +118,10 @@ class ProductoControllerTest {
     @Test
     void testListarProductos() throws Exception {
         // Arrange
-        ProductoDtoResponse producto1 = new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 20);
-        ProductoDtoResponse producto2 = new ProductoDtoResponse(2, "Producto 2", "Descripcion 2", 200.0, true, LocalDate.now(), 20);
+        ProductDtoResponse producto1 = new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 20);
+        ProductDtoResponse producto2 = new ProductDtoResponse(2, "Producto 2", "Descripcion 2", 200.0, true, LocalDate.now(), 20);
 
-        List<ProductoDtoResponse> productos = List.of(producto1, producto2);
+        List<ProductDtoResponse> productos = List.of(producto1, producto2);
         Pageable pageable = PageRequest.of(1 - 1, 10, Sort.by("id").descending());
 
         // Act
@@ -154,7 +154,7 @@ class ProductoControllerTest {
         String json = objectMapper.writeValueAsString(dto);
 
         // Act
-        ProductoDtoResponse producto = new ProductoDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
+        ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
         when(service.add(any(ProductoDtoRequest.class))).thenReturn(producto);
 
         // Assert

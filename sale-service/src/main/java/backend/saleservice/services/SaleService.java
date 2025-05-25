@@ -1,14 +1,14 @@
 package backend.saleservice.services;
 
 import backend.pageable.Paginado;
-import backend.saleservice.models.dtos.request.SaleRequestDto;
-import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.dto.request.SaleRequestDto;
+import backend.dto.response.SaleDtoResponse;
 import org.springframework.data.domain.Page;
 
 public interface SaleService {
-    Page<SaleResponseDto> getAll(Integer page, Integer size, String orderBy);
+    Page<SaleDtoResponse> getAll(Integer page, Integer size, String orderBy);
 
-    SaleResponseDto add(SaleRequestDto requestDto);
+    SaleDtoResponse add(SaleRequestDto requestDto);
 
-    Page<SaleResponseDto> getSalesByClient(Integer clientId, Paginado paginado);
+    Page<SaleDtoResponse> getSalesByClient(Integer clientId, Paginado paginado);
 }

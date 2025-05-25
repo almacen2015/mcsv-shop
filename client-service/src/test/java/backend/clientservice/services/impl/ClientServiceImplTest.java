@@ -1,8 +1,8 @@
 package backend.clientservice.services.impl;
 
 import backend.clientservice.exceptions.ClienteException;
-import backend.clientservice.models.dtos.ClienteRequestDTO;
-import backend.clientservice.models.dtos.ClienteResponseDTO;
+import backend.dto.request.ClienteRequestDTO;
+import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.Cliente;
 import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.repositories.ClientRepository;
@@ -63,7 +63,7 @@ class ClientServiceImplTest {
 
         when(repository.findByNumeroDocumento("12345678")).thenReturn(Optional.of(cliente1));
 
-        ClienteResponseDTO response = service.getByDocumentNumber("12345678", TipoDocumento.DNI.name());
+        ClientDtoResponse response = service.getByDocumentNumber("12345678", TipoDocumento.DNI.name());
 
         assertThat(response).isNotNull();
         assertEquals(1, response.id());
@@ -103,7 +103,7 @@ class ClientServiceImplTest {
                 .build();
         when(repository.findById(1L)).thenReturn(Optional.of(cliente1));
 
-        ClienteResponseDTO response = service.getById(1L);
+        ClientDtoResponse response = service.getById(1L);
 
         assertThat(response).isNotNull();
         assertEquals(1, response.id());
@@ -279,7 +279,7 @@ class ClientServiceImplTest {
 
         when(repository.save(any(Cliente.class))).thenReturn(cliente1);
 
-        ClienteResponseDTO response = service.add(dto);
+        ClientDtoResponse response = service.add(dto);
 
         assertThat(response).isNotNull();
         assertEquals(1, response.id());
@@ -293,7 +293,7 @@ class ClientServiceImplTest {
     void testListAll_whenDataEmpty_returnEmpty() {
         when(repository.findAll(any(Pageable.class))).thenReturn(Page.empty());
 
-        Page<ClienteResponseDTO> clientes = service.listAll(1, 10, "id");
+        Page<ClientDtoResponse> clientes = service.listAll(1, 10, "id");
 
         assertThat(clientes).isEmpty();
     }
@@ -321,7 +321,7 @@ class ClientServiceImplTest {
 
         when(repository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(listClientes, pageable, listClientes.size()));
 
-        Page<ClienteResponseDTO> clientes = service.listAll(1, 10, "id");
+        Page<ClientDtoResponse> clientes = service.listAll(1, 10, "id");
 
         assertThat(clientes).hasSize(2);
     }

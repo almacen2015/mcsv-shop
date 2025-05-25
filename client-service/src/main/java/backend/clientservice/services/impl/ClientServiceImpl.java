@@ -1,8 +1,8 @@
 package backend.clientservice.services.impl;
 
 import backend.clientservice.exceptions.ClienteException;
-import backend.clientservice.models.dtos.ClienteRequestDTO;
-import backend.clientservice.models.dtos.ClienteResponseDTO;
+import backend.dto.request.ClienteRequestDTO;
+import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.Cliente;
 import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.models.mappers.ClienteMapper;
@@ -33,7 +33,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClienteResponseDTO getByDocumentNumber(String documentNumber, String documentType) {
+    public ClientDtoResponse getByDocumentNumber(String documentNumber, String documentType) {
         validateDni(documentNumber);
         validateNumeroDocumento(documentNumber, documentType);
         validateTipoDocumento(documentType);
@@ -47,7 +47,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional(rollbackFor = ClienteException.class)
-    public ClienteResponseDTO add(ClienteRequestDTO dto) {
+    public ClientDtoResponse add(ClienteRequestDTO dto) {
         validateNombre(dto.nombre());
         validateApellido(dto.apellido());
         validateTipoDocumento(dto.tipoDocumento());
@@ -62,27 +62,27 @@ public class ClientServiceImpl implements ClientService {
 
         Cliente clientSaved = clientRepository.save(cliente);
 
-        ClienteResponseDTO response = clienteMapper.toResponseDTO(clientSaved);
+        ClientDtoResponse response = clienteMapper.toResponseDTO(clientSaved);
 
         return response;
     }
 
     @Override
-    public Page<ClienteResponseDTO> listAll(Integer page, Integer size, String orderBy) {
+    public Page<ClientDtoResponse> listAll(Integer page, Integer size, String orderBy) {
         Paginado paginado = new Paginado(page, size, orderBy);
         PageableUtils.validatePagination(paginado);
         Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Cliente> clientes = clientRepository.findAll(pageable);
 
-        List<ClienteResponseDTO> response = clientes.getContent().stream()
+        List<ClientDtoResponse> response = clientes.getContent().stream()
                 .map(clienteMapper::toResponseDTO).toList();
 
         return new PageImpl<>(response, pageable, clientes.getTotalElements());
     }
 
     @Override
-    public ClienteResponseDTO getById(Long id) {
+    public ClientDtoResponse getById(Long id) {
         validateId(id);
         Cliente cliente = clientRepository.findById(id).orElseThrow(() -> new ClienteException(ClienteException.CLIENT_NOT_FOUND));
 

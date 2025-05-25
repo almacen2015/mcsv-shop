@@ -1,16 +1,16 @@
 package backend.clientservice.services;
 
-import backend.clientservice.models.dtos.ClienteRequestDTO;
-import backend.clientservice.models.dtos.ClienteResponseDTO;
+import backend.dto.request.ClienteRequestDTO;
+import backend.dto.response.ClientDtoResponse;
 import org.springframework.data.domain.Page;
 
 public interface ClientService {
-    ClienteResponseDTO add(ClienteRequestDTO cliente);
+    ClientDtoResponse add(ClienteRequestDTO cliente);
 
-    Page<ClienteResponseDTO> listAll(Integer page, Integer size, String orderBy);
+    Page<ClientDtoResponse> listAll(Integer page, Integer size, String orderBy);
 
-    ClienteResponseDTO getById(Long id);
+    ClientDtoResponse getById(Long id);
 
-    ClienteResponseDTO getByDocumentNumber(String documentNumber, String documentType);
+    ClientDtoResponse getByDocumentNumber(String documentNumber, String documentType);
 
 }

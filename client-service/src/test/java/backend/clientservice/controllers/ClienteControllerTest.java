@@ -1,7 +1,7 @@
 package backend.clientservice.controllers;
 
-import backend.clientservice.models.dtos.ClienteRequestDTO;
-import backend.clientservice.models.dtos.ClienteResponseDTO;
+import backend.dto.request.ClienteRequestDTO;
+import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.security.TestSecurityConfig;
 import backend.clientservice.services.ClientService;
@@ -42,7 +42,7 @@ class ClienteControllerTest {
 
     @Test
     void testGetByDocumentNumber_whenClientFound_returnClient() throws Exception {
-        ClienteResponseDTO client = new ClienteResponseDTO(
+        ClientDtoResponse client = new ClientDtoResponse(
                 1L,
                 "Victor",
                 "Orbegozo",
@@ -71,7 +71,7 @@ class ClienteControllerTest {
                 "12345678"
         );
 
-        ClienteResponseDTO response = new ClienteResponseDTO(
+        ClientDtoResponse response = new ClientDtoResponse(
                 1L,
                 "Victor",
                 "Orbegozo",
@@ -96,7 +96,7 @@ class ClienteControllerTest {
 
     @Test
     void testGetById_whenClientFound_returnClient() throws Exception {
-        ClienteResponseDTO client = new ClienteResponseDTO(
+        ClientDtoResponse client = new ClientDtoResponse(
                 1L,
                 "Victor",
                 "Orbegozo",
@@ -132,7 +132,7 @@ class ClienteControllerTest {
 
     @Test
     void testListAll() throws Exception {
-        ClienteResponseDTO cliente1 = new ClienteResponseDTO(
+        ClientDtoResponse cliente1 = new ClientDtoResponse(
                 1L,
                 "Victor",
                 "Orbegozo",
@@ -141,7 +141,7 @@ class ClienteControllerTest {
                 "12345678"
         );
 
-        ClienteResponseDTO cliente2 = new ClienteResponseDTO(
+        ClientDtoResponse cliente2 = new ClientDtoResponse(
                 2L,
                 "Maria",
                 "Martinez",
@@ -150,7 +150,7 @@ class ClienteControllerTest {
                 "11111111"
         );
 
-        List<ClienteResponseDTO> listClientes = List.of(cliente1, cliente2);
+        List<ClientDtoResponse> listClientes = List.of(cliente1, cliente2);
         Pageable pageable = PageRequest.of(0, 10);
 
         when(service.listAll(1, 10, "id")).thenReturn(new PageImpl<>(listClientes, pageable, listClientes.size()));

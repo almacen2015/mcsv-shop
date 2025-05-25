@@ -1,11 +1,11 @@
 package backend.inventoryservice.services.impl;
 
+import backend.dto.request.MovementDtoRequest;
+import backend.dto.response.ProductDtoResponse;
 import backend.inventoryservice.client.ProductClient;
 import backend.inventoryservice.exceptions.InventoryException;
 import backend.inventoryservice.mappers.MovimientoMapper;
-import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
-import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
-import backend.inventoryservice.models.dtos.ProductoDtoResponse;
+import backend.dto.response.MovementDtoResponse;
 import backend.inventoryservice.models.entities.Movimiento;
 import backend.inventoryservice.models.entities.TipoMovimiento;
 import backend.inventoryservice.repositories.MovimientoRepository;
@@ -37,7 +37,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
-    public Page<MovimientoDtoResponse> listByIdProducto(Integer productId, Paginado paginado) {
+    public Page<MovementDtoResponse> listByIdProducto(Integer productId, Paginado paginado) {
         PageableUtils.validatePagination(paginado);
         Utils.validateIdProduct(productId);
 
@@ -48,7 +48,7 @@ public class MovimientoServiceImpl implements MovimientoService {
             return null;
         }
 
-        List<MovimientoDtoResponse> response = movimientos.getContent().stream()
+        List<MovementDtoResponse> response = movimientos.getContent().stream()
                 .map(movimientoMapper::toDto).toList();
 
         return new PageImpl<>(response, pageable, movimientos.getTotalElements());
@@ -56,13 +56,13 @@ public class MovimientoServiceImpl implements MovimientoService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public MovimientoDtoResponse add(MovimientoDtoRequest dto) {
+    public MovementDtoResponse add(MovementDtoRequest dto) {
         final Integer cantidad = dto.cantidad();
         final String tipoMovimiento = dto.tipoMovimiento();
         final Integer productoId = dto.productoId();
 
         validateData(cantidad, tipoMovimiento, productoId);
-        ProductoDtoResponse producto = getProduct(productoId);
+        ProductDtoResponse producto = getProduct(productoId);
         validateStock(producto.stock(), tipoMovimiento);
 
         productClient.updateStock(productoId, cantidad, tipoMovimiento);
@@ -78,8 +78,8 @@ public class MovimientoServiceImpl implements MovimientoService {
         }
     }
 
-    private ProductoDtoResponse getProduct(Integer productoId) {
-        Optional<ProductoDtoResponse> producto = Optional.ofNullable(productClient.getProduct(productoId));
+    private ProductDtoResponse getProduct(Integer productoId) {
+        Optional<ProductDtoResponse> producto = Optional.ofNullable(productClient.getProduct(productoId));
         if (producto.isEmpty()) {
             throw new InventoryException(InventoryException.INVALID_PRODUCT);
         }

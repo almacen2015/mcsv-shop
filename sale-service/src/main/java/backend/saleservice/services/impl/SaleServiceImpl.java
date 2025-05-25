@@ -1,5 +1,11 @@
 package backend.saleservice.services.impl;
 
+import backend.dto.request.MovementDtoRequest;
+import backend.dto.request.SaleRequestDto;
+import backend.dto.response.ClientDtoResponse;
+import backend.dto.response.DetailSaleDtoResponse;
+import backend.dto.response.ProductDtoResponse;
+import backend.dto.response.SaleDtoResponse;
 import backend.pageable.PageableUtils;
 import backend.pageable.Paginado;
 import backend.saleservice.client.ClientFeign;
@@ -8,19 +14,15 @@ import backend.saleservice.client.ProductClient;
 import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
 import backend.saleservice.models.documents.Venta;
-import backend.saleservice.models.dtos.request.MovementRequestDto;
-import backend.saleservice.models.dtos.request.SaleRequestDto;
-import backend.saleservice.models.dtos.response.ClientResponseDTO;
-import backend.saleservice.models.dtos.response.DetailSaleResponseDto;
-import backend.saleservice.models.dtos.response.ProductResponseDto;
-import backend.saleservice.models.dtos.response.SaleResponseDto;
 import backend.saleservice.models.mapper.DetailSaleMapper;
 import backend.saleservice.models.mapper.SaleMapper;
 import backend.saleservice.repositories.SaleRepository;
 import backend.saleservice.services.SaleService;
 import backend.utils.Utils;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,22 +47,22 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
-    public Page<SaleResponseDto> getSalesByClient(Integer clientId, Paginado paginado) {
+    public Page<SaleDtoResponse> getSalesByClient(Integer clientId, Paginado paginado) {
         PageableUtils.validatePagination(paginado);
-        ClientResponseDTO client = validateClientId(clientId);
+        ClientDtoResponse client = validateClientId(clientId);
 
         Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Venta> ventas = repository.findByClientId(clientId, pageable);
 
-        List<SaleResponseDto> response = new ArrayList<>();
+        List<SaleDtoResponse> response = new ArrayList<>();
         if (!ventas.isEmpty()) {
             response = ventas.getContent().stream()
                     .map(venta -> {
-                        List<DetailSaleResponseDto> detalles = detailSaleMapper.toDtos(venta.getDetails());
+                        List<DetailSaleDtoResponse> detalles = detailSaleMapper.toDtos(venta.getDetails());
                         String fullNameClient = getFullNameClient(client.nombre(), client.apellido());
 
-                        return new SaleResponseDto(
+                        return new SaleDtoResponse(
                                 venta.getId(),
                                 fullNameClient,
                                 venta.getDate().toString(),
@@ -74,9 +76,9 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public SaleResponseDto add(SaleRequestDto requestDto) {
+    public SaleDtoResponse add(SaleRequestDto requestDto) {
         String fullName;
-        ClientResponseDTO client = validateClientId(requestDto.clientId());
+        ClientDtoResponse client = validateClientId(requestDto.clientId());
         Venta venta = saleMapper.toEntity(requestDto);
         validateDetails(venta.getDetails());
 
@@ -87,9 +89,9 @@ public class SaleServiceImpl implements SaleService {
 
         fullName = getFullNameClient(client.nombre(), client.apellido());
 
-        List<DetailSaleResponseDto> detalles = detailSaleMapper.toDtos(venta.getDetails());
+        List<DetailSaleDtoResponse> detalles = detailSaleMapper.toDtos(venta.getDetails());
 
-        SaleResponseDto response = new SaleResponseDto(ventaSaved.getId(), fullName, venta.getDate().toString(), venta.getTotal(), detalles);
+        SaleDtoResponse response = new SaleDtoResponse(ventaSaved.getId(), fullName, venta.getDate().toString(), venta.getTotal(), detalles);
         addMovement(venta.getDetails());
 
         return response;
@@ -99,26 +101,26 @@ public class SaleServiceImpl implements SaleService {
         final String TIPO_MOVIMIENTO_SALIDA = "SALIDA";
 
         for (DetalleVenta detail : details) {
-            MovementRequestDto movimiento = new MovementRequestDto(detail.getProductId(), detail.getQuantity(), TIPO_MOVIMIENTO_SALIDA);
+            MovementDtoRequest movimiento = new MovementDtoRequest(detail.getProductId(), detail.getQuantity(), TIPO_MOVIMIENTO_SALIDA);
 
             movementClient.createMovimientoDto(movimiento);
         }
     }
 
     @Override
-    public Page<SaleResponseDto> getAll(Integer page, Integer size, String orderBy) {
+    public Page<SaleDtoResponse> getAll(Integer page, Integer size, String orderBy) {
         Paginado paginado = new Paginado(page, size, orderBy);
         PageableUtils.validatePagination(paginado);
         Pageable pageable = PageableUtils.constructPageable(paginado);
 
         Page<Venta> ventas = repository.findAll(pageable);
-        List<SaleResponseDto> response = new ArrayList<>();
+        List<SaleDtoResponse> response = new ArrayList<>();
         for (Venta venta : ventas.getContent()) {
-            ClientResponseDTO client = clientFeign.getClient(venta.getClientId().longValue());
+            ClientDtoResponse client = clientFeign.getClient(venta.getClientId().longValue());
             String fullNameClient = getFullNameClient(client.nombre(), client.apellido());
 
-            List<DetailSaleResponseDto> detalles = detailSaleMapper.toDtos(venta.getDetails());
-            SaleResponseDto ventaDto = new SaleResponseDto(venta.getId(), fullNameClient, venta.getDate().toString(), venta.getTotal(), detalles);
+            List<DetailSaleDtoResponse> detalles = detailSaleMapper.toDtos(venta.getDetails());
+            SaleDtoResponse ventaDto = new SaleDtoResponse(venta.getId(), fullNameClient, venta.getDate().toString(), venta.getTotal(), detalles);
 
             response.add(ventaDto);
         }
@@ -139,12 +141,12 @@ public class SaleServiceImpl implements SaleService {
         return subTotal;
     }
 
-    private ClientResponseDTO validateClientId(Integer id) {
+    private ClientDtoResponse validateClientId(Integer id) {
         if (Utils.isNotPositive(id)) {
             throw new SaleException(SaleException.CLIENT_ID_INVALID);
         }
 
-        ClientResponseDTO client = clientFeign.getClient(id.longValue());
+        ClientDtoResponse client = clientFeign.getClient(id.longValue());
         return client;
     }
 
@@ -159,7 +161,7 @@ public class SaleServiceImpl implements SaleService {
             validateQuantity(detail.getQuantity());
             validateProductRepeated(detail, productIds);
 
-            ProductResponseDto product = productClient.getProduct(detail.getProductId());
+            ProductDtoResponse product = productClient.getProduct(detail.getProductId());
             validateProduct(product);
 
             validateQuantityGreaterThanStock(detail.getQuantity(), product.stock());
@@ -175,7 +177,7 @@ public class SaleServiceImpl implements SaleService {
         }
     }
 
-    private void validateProduct(ProductResponseDto product) {
+    private void validateProduct(ProductDtoResponse product) {
         if (Optional.ofNullable(product).isEmpty()) {
             throw new SaleException(SaleException.PRODUCT_NOT_FOUND);
         }

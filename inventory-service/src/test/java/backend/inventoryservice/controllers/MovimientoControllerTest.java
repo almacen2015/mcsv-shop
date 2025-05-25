@@ -1,9 +1,10 @@
 package backend.inventoryservice.controllers;
 
-import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
-import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
+import backend.dto.request.MovementDtoRequest;
+import backend.dto.response.MovementDtoResponse;
 import backend.inventoryservice.security.TestSecurityConfig;
 import backend.inventoryservice.services.MovimientoService;
+import backend.pageable.Paginado;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,12 +65,12 @@ class MovimientoControllerTest {
     @Test
     void testListarMovimientosPorProducto() throws Exception {
         // Arrange
-        MovimientoDtoResponse response = new MovimientoDtoResponse(10, 1, 5, "ENTRADA", "2025-01-01");
+        MovementDtoResponse response = new MovementDtoResponse(10, 1, 5, "ENTRADA", "2025-01-01");
         Paginado paginado = new Paginado(1, 10, "id");
         Pageable pageable = PageRequest.of(0, 10);
         String json = objectMapper.writeValueAsString(paginado);
 
-        List<MovimientoDtoResponse> listResponse = List.of(response);
+        List<MovementDtoResponse> listResponse = List.of(response);
 
         when(service.listByIdProducto(any(Integer.class), any(Paginado.class))).thenReturn(new PageImpl<>(listResponse, pageable, listResponse.size()));
         // Act
@@ -85,11 +86,11 @@ class MovimientoControllerTest {
     @Test
     void testRegistrarMovimiento() throws Exception {
         // Arrange
-        MovimientoDtoRequest dto = new MovimientoDtoRequest(1, 1, "ENTRADA");
+        MovementDtoRequest dto = new MovementDtoRequest(1, 1, "ENTRADA");
         String json = objectMapper.writeValueAsString(dto);
-        MovimientoDtoResponse response = new MovimientoDtoResponse(1, 1, 1, "ENTRADA", "2025-01-01");
+        MovementDtoResponse response = new MovementDtoResponse(1, 1, 1, "ENTRADA", "2025-01-01");
 
-        when(service.add(any(MovimientoDtoRequest.class))).thenReturn(response);
+        when(service.add(any(MovementDtoRequest.class))).thenReturn(response);
         // Act
         mockMvc.perform(post("/api/inventory")
                         .contentType(MediaType.APPLICATION_JSON)

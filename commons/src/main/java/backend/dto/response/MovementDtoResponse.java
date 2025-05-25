@@ -1,6 +1,6 @@
-package backend.saleservice.models.dtos.response;
+package backend.dto.response;
 
-public record MovementResponseDto(Integer id,
+public record MovementDtoResponse(Integer id,
                                   Integer productoId,
                                   Integer cantidad,
                                   String tipoMovimiento,

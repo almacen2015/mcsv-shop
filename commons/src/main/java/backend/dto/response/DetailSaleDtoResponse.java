@@ -1,6 +1,6 @@
-package backend.saleservice.models.dtos.response;
+package backend.dto.response;
 
-public record DetailSaleResponseDto(Integer productId,
+public record DetailSaleDtoResponse(Integer productId,
                                     Integer quantity,
                                     Double unitPrice,
                                     Double subTotal) {

@@ -1,7 +1,7 @@
 package backend.inventoryservice.controllers;
 
-import backend.inventoryservice.models.dtos.MovimientoDtoRequest;
-import backend.inventoryservice.models.dtos.MovimientoDtoResponse;
+import backend.dto.request.MovementDtoRequest;
+import backend.dto.response.MovementDtoResponse;
 import backend.inventoryservice.services.MovimientoService;
 import backend.pageable.Paginado;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +34,8 @@ public class InventoryController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @PostMapping
-    public ResponseEntity<MovimientoDtoResponse> add(@RequestBody MovimientoDtoRequest dto) {
-        MovimientoDtoResponse response = movimientoService.add(dto);
+    public ResponseEntity<MovementDtoResponse> add(@RequestBody MovementDtoRequest dto) {
+        MovementDtoResponse response = movimientoService.add(dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -48,8 +48,8 @@ public class InventoryController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @PostMapping("/{idProducto}")
-    public ResponseEntity<Page<MovimientoDtoResponse>> listByIdProducto(@PathVariable Integer idProducto, @RequestBody Paginado paginado) {
-        Page<MovimientoDtoResponse> response = movimientoService.listByIdProducto(idProducto, paginado);
+    public ResponseEntity<Page<MovementDtoResponse>> listByIdProducto(@PathVariable Integer idProducto, @RequestBody Paginado paginado) {
+        Page<MovementDtoResponse> response = movimientoService.listByIdProducto(idProducto, paginado);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

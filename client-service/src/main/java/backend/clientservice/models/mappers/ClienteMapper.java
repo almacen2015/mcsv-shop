@@ -1,7 +1,7 @@
 package backend.clientservice.models.mappers;
 
-import backend.clientservice.models.dtos.ClienteRequestDTO;
-import backend.clientservice.models.dtos.ClienteResponseDTO;
+import backend.dto.request.ClienteRequestDTO;
+import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.Cliente;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,7 +16,7 @@ public interface ClienteMapper {
     @Mapping(target = "id", ignore = true)
     Cliente toEntity(ClienteRequestDTO dto);
 
-    ClienteResponseDTO toResponseDTO(Cliente cliente);
+    ClientDtoResponse toResponseDTO(Cliente cliente);
 
-    List<ClienteResponseDTO> toListResponseDTO(List<Cliente> clientes);
+    List<ClientDtoResponse> toListResponseDTO(List<Cliente> clientes);
 }

@@ -1,8 +1,8 @@
 package backend.saleservice.controllers;
 
 import backend.pageable.Paginado;
-import backend.saleservice.models.dtos.request.SaleRequestDto;
-import backend.saleservice.models.dtos.response.SaleResponseDto;
+import backend.dto.request.SaleRequestDto;
+import backend.dto.response.SaleDtoResponse;
 import backend.saleservice.services.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +30,7 @@ public class SaleController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @PostMapping
-    public ResponseEntity<SaleResponseDto> createVenta(@RequestBody SaleRequestDto requestDto) {
+    public ResponseEntity<SaleDtoResponse> createVenta(@RequestBody SaleRequestDto requestDto) {
         return new ResponseEntity<>(service.add(requestDto), HttpStatus.CREATED);
     }
 
@@ -41,7 +41,7 @@ public class SaleController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @GetMapping
-    public ResponseEntity<Page<SaleResponseDto>> list(@RequestParam Integer page,
+    public ResponseEntity<Page<SaleDtoResponse>> list(@RequestParam Integer page,
                                                       @RequestParam Integer size,
                                                       @RequestParam String orderBy) {
         return new ResponseEntity<>(service.getAll(page, size, orderBy), HttpStatus.OK);
@@ -54,7 +54,7 @@ public class SaleController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @PostMapping("/client/{id}")
-    public ResponseEntity<Page<SaleResponseDto>> getByClient(@RequestBody Paginado paginado, @PathVariable Integer id) {
+    public ResponseEntity<Page<SaleDtoResponse>> getByClient(@RequestBody Paginado paginado, @PathVariable Integer id) {
         return new ResponseEntity<>(service.getSalesByClient(id, paginado), HttpStatus.OK);
     }
 }
