@@ -1,6 +1,6 @@
 package backend.productservice.mappers;
 
-import backend.dto.request.ProductoDtoRequest;
+import backend.dto.request.ProductDtoRequest;
 import backend.dto.response.ProductDtoResponse;
 import backend.productservice.models.entities.Producto;
 import org.mapstruct.Mapper;
@@ -14,7 +14,7 @@ public interface ProductoMapper {
     ProductoMapper INSTANCE = Mappers.getMapper(ProductoMapper.class);
 
     @Mapping(target = "id", ignore = true)
-    Producto toEntity(ProductoDtoRequest dto);
+    Producto toEntity(ProductDtoRequest dto);
 
     Producto toEntity(ProductDtoResponse dto);
 

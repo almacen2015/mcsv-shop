@@ -1,7 +1,7 @@
 package backend.saleservice.controllers;
 
 import backend.pageable.Paginado;
-import backend.dto.request.SaleRequestDto;
+import backend.dto.request.SaleDtoRequest;
 import backend.dto.response.SaleDtoResponse;
 import backend.saleservice.services.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +30,7 @@ public class SaleController {
             @ApiResponse(responseCode = "401", description = "Acceso no autorizado")
     })
     @PostMapping
-    public ResponseEntity<SaleDtoResponse> createVenta(@RequestBody SaleRequestDto requestDto) {
+    public ResponseEntity<SaleDtoResponse> createVenta(@RequestBody SaleDtoRequest requestDto) {
         return new ResponseEntity<>(service.add(requestDto), HttpStatus.CREATED);
     }
 

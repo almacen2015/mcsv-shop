@@ -2,8 +2,8 @@ package backend.saleservice.controllers;
 
 import backend.pageable.Paginado;
 import backend.saleservice.exceptions.SaleException;
-import backend.dto.request.DetailSaleRequestDto;
-import backend.dto.request.SaleRequestDto;
+import backend.dto.request.DetailSaleDtoRequest;
+import backend.dto.request.SaleDtoRequest;
 import backend.dto.response.DetailSaleDtoResponse;
 import backend.dto.response.SaleDtoResponse;
 import backend.saleservice.security.TestSecurityConfig;
@@ -44,12 +44,12 @@ class SaleControllerTest {
 
     @Test
     void createVenta_whenStockIsZero_returnsError() throws Exception {
-        DetailSaleRequestDto detalle1 = new DetailSaleRequestDto(1, 5);
-        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detalle1));
+        DetailSaleDtoRequest detalle1 = new DetailSaleDtoRequest(1, 5);
+        SaleDtoRequest requestDto = new SaleDtoRequest(1, List.of(detalle1));
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.QUANTITY_GREATER_THAN_STOCK));
+        when(service.add(any(SaleDtoRequest.class))).thenThrow(new SaleException(SaleException.QUANTITY_GREATER_THAN_STOCK));
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -62,11 +62,11 @@ class SaleControllerTest {
 
     @Test
     void createVenta_whenDetailIsEmpty_returnsError() throws Exception {
-        SaleRequestDto requestDto = new SaleRequestDto(1, List.of());
+        SaleDtoRequest requestDto = new SaleDtoRequest(1, List.of());
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.DETAILS_INVALID));
+        when(service.add(any(SaleDtoRequest.class))).thenThrow(new SaleException(SaleException.DETAILS_INVALID));
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,13 +79,13 @@ class SaleControllerTest {
 
     @Test
     void createVenta_whenClientIdIsNotValid_returnsError() throws Exception {
-        DetailSaleRequestDto detalle1 = new DetailSaleRequestDto(1, 10);
-        DetailSaleRequestDto detalle2 = new DetailSaleRequestDto(2, 5);
-        SaleRequestDto requestDto = new SaleRequestDto(null, List.of(detalle1, detalle2));
+        DetailSaleDtoRequest detalle1 = new DetailSaleDtoRequest(1, 10);
+        DetailSaleDtoRequest detalle2 = new DetailSaleDtoRequest(2, 5);
+        SaleDtoRequest requestDto = new SaleDtoRequest(null, List.of(detalle1, detalle2));
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.CLIENT_ID_INVALID));
+        when(service.add(any(SaleDtoRequest.class))).thenThrow(new SaleException(SaleException.CLIENT_ID_INVALID));
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,13 +98,13 @@ class SaleControllerTest {
 
     @Test
     void createVenta_whenProductIdIsRepeated_returnsError() throws Exception {
-        DetailSaleRequestDto detalle1 = new DetailSaleRequestDto(1, 10);
-        DetailSaleRequestDto detalle2 = new DetailSaleRequestDto(1, 5);
-        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detalle1, detalle2));
+        DetailSaleDtoRequest detalle1 = new DetailSaleDtoRequest(1, 10);
+        DetailSaleDtoRequest detalle2 = new DetailSaleDtoRequest(1, 5);
+        SaleDtoRequest requestDto = new SaleDtoRequest(1, List.of(detalle1, detalle2));
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.PRODUCT_REPEATED));
+        when(service.add(any(SaleDtoRequest.class))).thenThrow(new SaleException(SaleException.PRODUCT_REPEATED));
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,12 +117,12 @@ class SaleControllerTest {
 
     @Test
     void createVenta_whenProductIdIsNotValid_returnsError() throws Exception {
-        DetailSaleRequestDto detailSaleRequestDto = new DetailSaleRequestDto(0, 10);
-        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detailSaleRequestDto));
+        DetailSaleDtoRequest detailSaleDtoRequest = new DetailSaleDtoRequest(0, 10);
+        SaleDtoRequest requestDto = new SaleDtoRequest(1, List.of(detailSaleDtoRequest));
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenThrow(new SaleException(SaleException.PRODUCT_ID_INVALID));
+        when(service.add(any(SaleDtoRequest.class))).thenThrow(new SaleException(SaleException.PRODUCT_ID_INVALID));
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -135,15 +135,15 @@ class SaleControllerTest {
 
     @Test
     void createVenta_whenDataIsValid_returnsVenta() throws Exception {
-        DetailSaleRequestDto detailSaleRequestDto = new DetailSaleRequestDto(1, 10);
-        SaleRequestDto requestDto = new SaleRequestDto(1, List.of(detailSaleRequestDto));
+        DetailSaleDtoRequest detailSaleDtoRequest = new DetailSaleDtoRequest(1, 10);
+        SaleDtoRequest requestDto = new SaleDtoRequest(1, List.of(detailSaleDtoRequest));
 
         DetailSaleDtoResponse detalle1 = constructDetailSaleResponseDto(1, 10, 10.00, 100.00);
         SaleDtoResponse saleDtoResponse1 = constructSaleResponseDto("1", "Victor Orbegozo", "2025-10-10", 75.00, List.of(detalle1));
 
         final String json = objectMapper.writeValueAsString(requestDto);
 
-        when(service.add(any(SaleRequestDto.class))).thenReturn(saleDtoResponse1);
+        when(service.add(any(SaleDtoRequest.class))).thenReturn(saleDtoResponse1);
 
         mockMvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)

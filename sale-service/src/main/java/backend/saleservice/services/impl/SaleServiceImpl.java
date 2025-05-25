@@ -1,7 +1,7 @@
 package backend.saleservice.services.impl;
 
 import backend.dto.request.MovementDtoRequest;
-import backend.dto.request.SaleRequestDto;
+import backend.dto.request.SaleDtoRequest;
 import backend.dto.response.ClientDtoResponse;
 import backend.dto.response.DetailSaleDtoResponse;
 import backend.dto.response.ProductDtoResponse;
@@ -76,7 +76,7 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public SaleDtoResponse add(SaleRequestDto requestDto) {
+    public SaleDtoResponse add(SaleDtoRequest requestDto) {
         String fullName;
         ClientDtoResponse client = validateClientId(requestDto.clientId());
         Venta venta = saleMapper.toEntity(requestDto);

@@ -5,7 +5,7 @@ import backend.productservice.enums.Estado;
 import backend.productservice.enums.TipoMovimiento;
 import backend.productservice.exceptions.ProductException;
 import backend.productservice.mappers.ProductoMapper;
-import backend.dto.request.ProductoDtoRequest;
+import backend.dto.request.ProductDtoRequest;
 import backend.dto.response.ProductDtoResponse;
 import backend.productservice.models.entities.Producto;
 import backend.productservice.repositories.ProductoRepository;
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public ProductDtoResponse update(ProductoDtoRequest dto, Integer id) {
+    public ProductDtoResponse update(ProductDtoRequest dto, Integer id) {
         validateData(dto);
         Utils.validateIdProduct(id);
 
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public ProductDtoResponse add(ProductoDtoRequest dto) {
+    public ProductDtoResponse add(ProductDtoRequest dto) {
         validateData(dto);
         Producto producto = productoMapper.toEntity(dto);
         producto.setEstado(Estado.ACTIVO.getValor());
@@ -96,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private void validateData(ProductoDtoRequest dto) {
+    private void validateData(ProductDtoRequest dto) {
         final String nombre = dto.nombre();
         final String descripcion = dto.descripcion();
         final Double precio = dto.precio();

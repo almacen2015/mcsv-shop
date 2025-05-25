@@ -1,15 +1,15 @@
 package backend.productservice.services;
 
 import backend.pageable.Paginado;
-import backend.dto.request.ProductoDtoRequest;
+import backend.dto.request.ProductDtoRequest;
 import backend.dto.response.ProductDtoResponse;
 import org.springframework.data.domain.Page;
 
 public interface ProductService {
 
-    ProductDtoResponse add(ProductoDtoRequest dto);
+    ProductDtoResponse add(ProductDtoRequest dto);
 
-    ProductDtoResponse update(ProductoDtoRequest dto, Integer id);
+    ProductDtoResponse update(ProductDtoRequest dto, Integer id);
 
     Page<ProductDtoResponse> listAll(Integer page, Integer size, String orderBy);
 

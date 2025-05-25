@@ -1,5 +1,5 @@
 package backend.dto.request;
 
-public record DetailSaleRequestDto(Integer productId,
+public record DetailSaleDtoRequest(Integer productId,
                                    Integer quantity) {
 }

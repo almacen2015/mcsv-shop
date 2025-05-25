@@ -1,6 +1,6 @@
 package backend.clientservice.controllers;
 
-import backend.dto.request.ClienteRequestDTO;
+import backend.dto.request.ClientDtoRequest;
 import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.TipoDocumento;
 import backend.clientservice.security.TestSecurityConfig;
@@ -63,7 +63,7 @@ class ClienteControllerTest {
 
     @Test
     void testAdd_whenRequestIsValid_returnClient() throws Exception {
-        ClienteRequestDTO dto = new ClienteRequestDTO(
+        ClientDtoRequest dto = new ClientDtoRequest(
                 "Victor",
                 "Orbegozo",
                 "DNI",
@@ -81,7 +81,7 @@ class ClienteControllerTest {
         );
         String json = objectMapper.writeValueAsString(dto);
 
-        when(service.add(any(ClienteRequestDTO.class))).thenReturn(response);
+        when(service.add(any(ClientDtoRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/clients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +90,7 @@ class ClienteControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Victor"));
 
-        verify(service, times(1)).add(any(ClienteRequestDTO.class));
+        verify(service, times(1)).add(any(ClientDtoRequest.class));
 
     }
 

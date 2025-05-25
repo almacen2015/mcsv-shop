@@ -1,6 +1,6 @@
 package backend.productservice.controllers;
 
-import backend.dto.request.ProductoDtoRequest;
+import backend.dto.request.ProductDtoRequest;
 import backend.dto.response.ProductDtoResponse;
 import backend.pageable.Paginado;
 import backend.productservice.security.TestSecurityConfig;
@@ -44,12 +44,12 @@ class ProductoControllerTest {
     @Test
     void testActualizarProducto() throws Exception {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 2", "Descripcion 1", 100.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 2", "Descripcion 1", 100.0);
         String json = objectMapper.writeValueAsString(dto);
         ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 2", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
 
         // Act
-        when(service.update(any(ProductoDtoRequest.class), any(Integer.class))).thenReturn(producto);
+        when(service.update(any(ProductDtoRequest.class), any(Integer.class))).thenReturn(producto);
 
         // Assert
         mockMvc.perform(patch("/api/products/{id}", 1)
@@ -150,12 +150,12 @@ class ProductoControllerTest {
     @Test
     void testAgregarProducto() throws Exception {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "Descripcion 1", 100.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 1", "Descripcion 1", 100.0);
         String json = objectMapper.writeValueAsString(dto);
 
         // Act
         ProductDtoResponse producto = new ProductDtoResponse(1, "Producto 1", "Descripcion 1", 100.0, true, LocalDate.now(), 10);
-        when(service.add(any(ProductoDtoRequest.class))).thenReturn(producto);
+        when(service.add(any(ProductDtoRequest.class))).thenReturn(producto);
 
         // Assert
         mockMvc.perform(post("/api/products")

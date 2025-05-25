@@ -1,6 +1,6 @@
 package backend.clientservice.controllers;
 
-import backend.dto.request.ClienteRequestDTO;
+import backend.dto.request.ClientDtoRequest;
 import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.services.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +45,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "500", description = "Error interno")
     })
     @PostMapping
-    public ResponseEntity<ClientDtoResponse> add(@RequestBody ClienteRequestDTO cliente) {
+    public ResponseEntity<ClientDtoResponse> add(@RequestBody ClientDtoRequest cliente) {
         return new ResponseEntity<>(clientService.add(cliente), HttpStatus.OK);
     }
 

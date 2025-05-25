@@ -1,7 +1,7 @@
 package backend.clientservice.services.impl;
 
 import backend.clientservice.exceptions.ClienteException;
-import backend.dto.request.ClienteRequestDTO;
+import backend.dto.request.ClientDtoRequest;
 import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.Cliente;
 import backend.clientservice.models.entities.TipoDocumento;
@@ -113,7 +113,7 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenFechaNacimientoIsInvalid_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO(
+        ClientDtoRequest dto = new ClientDtoRequest(
                 "Victor",
                 "Orbegozo",
                 "12345678",
@@ -124,7 +124,7 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenFechaNacimientoIsBlank_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO(
+        ClientDtoRequest dto = new ClientDtoRequest(
                 "Victor",
                 "Orbegozo",
                 "12345678",
@@ -135,7 +135,7 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenFechaNacimientoIsEmpty_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO(
+        ClientDtoRequest dto = new ClientDtoRequest(
                 "Victor",
                 "Orbegozo",
                 "12345678",
@@ -146,7 +146,7 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenFechaNacimientoIsNull_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO(
+        ClientDtoRequest dto = new ClientDtoRequest(
                 "Victor",
                 "Orbegozo",
                 "12345678",
@@ -157,31 +157,31 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenTipoDocumentoIsInvalid_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "12345678", "AAAAA", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "12345678", "AAAAA", "1994-05-04");
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenTipoDocumentoIsBlank_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "12345678", "   ", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "12345678", "   ", "1994-05-04");
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenTipoDocumentoIsNull_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "12345678", null, "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "12345678", null, "1994-05-04");
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenTipoDocumentoIsEmpty_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "12345678", "", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "12345678", "", "1994-05-04");
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenDocumentNumberExists_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO(
+        ClientDtoRequest dto = new ClientDtoRequest(
                 "Victor",
                 "Orbegozo",
                 "12345678",
@@ -195,56 +195,56 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenNumeroDocumentoIsDniAndNumeroDocumentoIsDifferent8Characters_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "123456789", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "123456789", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenNumeroDocumentoIsBlank_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "   ", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "   ", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenNumeroDocumentoIsNull_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", null, "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", null, "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenNumeroDocumentoIsEmpty_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenApellidoIsBlank_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "    ", "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "    ", "12345678", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenApellidoIsNull_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", null, "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", null, "12345678", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenApellidoIsEmpty_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "", "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "", "12345678", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenNameIsBlank_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("     ", "Orbegozo", "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("     ", "Orbegozo", "12345678", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
@@ -252,14 +252,14 @@ class ClientServiceImplTest {
 
     @Test
     void testAdd_whenNameIsNull_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO(null, "Orbegozo", "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest(null, "Orbegozo", "12345678", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
 
     @Test
     void testAdd_whenNameIsEmpty_returnError() {
-        ClienteRequestDTO dto = new ClienteRequestDTO("", "Orbegozo", "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("", "Orbegozo", "12345678", "DNI", "1994-05-04");
 
         assertThrows(ClienteException.class, () -> service.add(dto));
     }
@@ -275,7 +275,7 @@ class ClientServiceImplTest {
                 .fechaNacimiento(LocalDate.of(1994, 5, 4))
                 .build();
 
-        ClienteRequestDTO dto = new ClienteRequestDTO("Victor", "Orbegozo", "12345678", "DNI", "1994-05-04");
+        ClientDtoRequest dto = new ClientDtoRequest("Victor", "Orbegozo", "12345678", "DNI", "1994-05-04");
 
         when(repository.save(any(Cliente.class))).thenReturn(cliente1);
 

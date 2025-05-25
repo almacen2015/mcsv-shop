@@ -1,7 +1,7 @@
 package backend.productservice.controllers;
 
 import backend.pageable.Paginado;
-import backend.dto.request.ProductoDtoRequest;
+import backend.dto.request.ProductDtoRequest;
 import backend.dto.response.ProductDtoResponse;
 import backend.productservice.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,7 @@ public class ProductoController {
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
     @PostMapping
-    public ResponseEntity<ProductDtoResponse> add(@RequestBody ProductoDtoRequest dto) {
+    public ResponseEntity<ProductDtoResponse> add(@RequestBody ProductDtoRequest dto) {
         ProductDtoResponse producto = productService.add(dto);
         return new ResponseEntity<>(producto, HttpStatus.CREATED);
     }
@@ -79,7 +79,7 @@ public class ProductoController {
             @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductDtoResponse> update(@RequestBody ProductoDtoRequest dto, @PathVariable Integer id) {
+    public ResponseEntity<ProductDtoResponse> update(@RequestBody ProductDtoRequest dto, @PathVariable Integer id) {
         ProductDtoResponse producto = productService.update(dto, id);
         return new ResponseEntity<>(producto, HttpStatus.OK);
     }

@@ -1,6 +1,6 @@
 package backend.productservice.services.impl;
 
-import backend.dto.request.ProductoDtoRequest;
+import backend.dto.request.ProductDtoRequest;
 import backend.dto.response.ProductDtoResponse;
 import backend.pageable.Paginado;
 import backend.productservice.exceptions.ProductException;
@@ -54,7 +54,7 @@ class ProductServiceImplTest {
                 .precio(200.0)
                 .build();
 
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 2", "Descripcion 2", 200.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 2", "Descripcion 2", 200.0);
 
         when(repository.findById(any(Integer.class))).thenReturn(Optional.of(producto));
         when(repository.save(any(Producto.class))).thenReturn(productoActualizado);
@@ -259,7 +259,7 @@ class ProductServiceImplTest {
     @Test
     void testAgregarProducto_DadoPrecioNegativo_RetornaError() {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "Descripcion 1", -100.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 1", "Descripcion 1", -100.0);
 
         // Act & Assert
         assertThrows(ProductException.class, () -> service.add(dto));
@@ -268,7 +268,7 @@ class ProductServiceImplTest {
     @Test
     void testAgregarProducto_DadoPrecioCero_RetornaError() {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "Descripcion 1", 0.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 1", "Descripcion 1", 0.0);
 
         // Act & Assert
         assertThrows(ProductException.class, () -> service.add(dto));
@@ -277,7 +277,7 @@ class ProductServiceImplTest {
     @Test
     void testAgregarProducto_DadoDescripcionVacia_RetornaError() {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "", 100.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 1", "", 100.0);
 
         // Act & Assert
         assertThrows(ProductException.class, () -> service.add(dto));
@@ -286,7 +286,7 @@ class ProductServiceImplTest {
     @Test
     void testAgregarProducto_DadoNombreVacio_RetornaError() {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("", "Descripcion 1", 100.0);
+        ProductDtoRequest dto = new ProductDtoRequest("", "Descripcion 1", 100.0);
 
         // Act & Assert
         assertThrows(ProductException.class, () -> service.add(dto));
@@ -295,7 +295,7 @@ class ProductServiceImplTest {
     @Test
     void testAgregarProducto_DadoParametrosValidos_RetornaProducto() {
         // Arrange
-        ProductoDtoRequest dto = new ProductoDtoRequest("Producto 1", "Descripcion 1", 100.0);
+        ProductDtoRequest dto = new ProductDtoRequest("Producto 1", "Descripcion 1", 100.0);
         Producto productoGuardado = Producto.builder()
                 .id(1)
                 .nombre("Producto 1")

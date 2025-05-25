@@ -1,7 +1,7 @@
 package backend.clientservice.services.impl;
 
 import backend.clientservice.exceptions.ClienteException;
-import backend.dto.request.ClienteRequestDTO;
+import backend.dto.request.ClientDtoRequest;
 import backend.dto.response.ClientDtoResponse;
 import backend.clientservice.models.entities.Cliente;
 import backend.clientservice.models.entities.TipoDocumento;
@@ -47,7 +47,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional(rollbackFor = ClienteException.class)
-    public ClientDtoResponse add(ClienteRequestDTO dto) {
+    public ClientDtoResponse add(ClientDtoRequest dto) {
         validateNombre(dto.nombre());
         validateApellido(dto.apellido());
         validateTipoDocumento(dto.tipoDocumento());

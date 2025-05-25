@@ -11,9 +11,9 @@ import backend.saleservice.client.ProductClient;
 import backend.saleservice.exceptions.SaleException;
 import backend.saleservice.models.documents.DetalleVenta;
 import backend.saleservice.models.documents.Venta;
-import backend.dto.request.DetailSaleRequestDto;
+import backend.dto.request.DetailSaleDtoRequest;
 import backend.dto.request.MovementDtoRequest;
-import backend.dto.request.SaleRequestDto;
+import backend.dto.request.SaleDtoRequest;
 import backend.dto.response.SaleDtoResponse;
 import backend.saleservice.repositories.SaleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,8 +61,8 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenPriceIsNotValid_returnsError() {
-        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
+        DetailSaleDtoRequest detalleVentaRequestDto = new DetailSaleDtoRequest(1, 10);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(1, List.of(detalleVentaRequestDto));
         ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
                 "Coca Cola",
@@ -81,8 +81,8 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenStockIsNotValid_returnsError() {
-        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
+        DetailSaleDtoRequest detalleVentaRequestDto = new DetailSaleDtoRequest(1, 10);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(1, List.of(detalleVentaRequestDto));
         ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
                 "Coca Cola",
@@ -101,9 +101,9 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenProductIsRepeated_returnsError() {
-        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
-        DetailSaleRequestDto detalleVentaRequestDto2 = new DetailSaleRequestDto(1, 5);
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto, detalleVentaRequestDto2));
+        DetailSaleDtoRequest detalleVentaRequestDto = new DetailSaleDtoRequest(1, 10);
+        DetailSaleDtoRequest detalleVentaRequestDto2 = new DetailSaleDtoRequest(1, 5);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(1, List.of(detalleVentaRequestDto, detalleVentaRequestDto2));
 
         ProductDtoResponse productoDtoResponse = new ProductDtoResponse(
                 1,
@@ -124,8 +124,8 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenProductIdIsNotValid_returnsError() {
-        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(null, 10);
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
+        DetailSaleDtoRequest detalleVentaRequestDto = new DetailSaleDtoRequest(null, 10);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(1, List.of(detalleVentaRequestDto));
 
         SaleException exception = assertThrows(SaleException.class, () -> service.add(ventaRequestDto));
 
@@ -134,7 +134,7 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenDetailsIsEmpty_returnsError() {
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, null);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(1, null);
         SaleException exception = assertThrows(SaleException.class, () -> service.add(ventaRequestDto));
 
         assertThat(exception.getMessage()).isEqualTo(SaleException.DETAILS_INVALID);
@@ -142,8 +142,8 @@ class VentaServiceImplTest {
 
     @Test
     void add_whenClientIdIsMinusOrEqualsZero_returnsError() {
-        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(-1, List.of(detalleVentaRequestDto));
+        DetailSaleDtoRequest detalleVentaRequestDto = new DetailSaleDtoRequest(1, 10);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(-1, List.of(detalleVentaRequestDto));
 
         SaleException exception = assertThrows(SaleException.class, () -> service.add(ventaRequestDto));
 
@@ -156,8 +156,8 @@ class VentaServiceImplTest {
         List<DetalleVenta> detalles = List.of(detalleVenta1);
         Venta venta1 = createVenta("1", 1, detalles);
 
-        DetailSaleRequestDto detalleVentaRequestDto = new DetailSaleRequestDto(1, 10);
-        SaleRequestDto ventaRequestDto = new SaleRequestDto(1, List.of(detalleVentaRequestDto));
+        DetailSaleDtoRequest detalleVentaRequestDto = new DetailSaleDtoRequest(1, 10);
+        SaleDtoRequest ventaRequestDto = new SaleDtoRequest(1, List.of(detalleVentaRequestDto));
 
         ClientDtoResponse clienteResponseDTO = new ClientDtoResponse(
                 1L,
