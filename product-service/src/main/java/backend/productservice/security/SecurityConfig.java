@@ -34,7 +34,7 @@ public class SecurityConfig {
                         ).permitAll()  // Permitir Swagger sin autenticación
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

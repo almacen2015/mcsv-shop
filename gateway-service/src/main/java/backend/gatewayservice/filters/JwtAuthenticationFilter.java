@@ -39,10 +39,13 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             Algorithm algorithm = Algorithm.HMAC256("2dd57dfe27e671d7fad1d9517900518607dfb1d0a4718105b2e69986349d0a83");
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
+            String roles = decodedJWT.getClaim("authorities").toString();
 
             ServerHttpRequest newRequest = exchange.getRequest()
                     .mutate()
-                    .header("Authorization", "Bearer " + token) // ← Aquí reenvías el token
+                    .header("Authorization", "Bearer " + token)
+                    .header("roles", roles)
+                    .header("user", decodedJWT.getSubject())
                     .build();
 
             return chain.filter(exchange.mutate().request(newRequest).build());
