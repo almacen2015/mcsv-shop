@@ -15,12 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtUtils jwtUtils;
-
-    public SecurityConfig(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -34,7 +28,7 @@ public class SecurityConfig {
                         ).permitAll()  // Permitir Swagger sin autenticación
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
